@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>삿포로 호텔 4곳 비교</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: 큰 글씨 한 칼럼. 위에서부터 한눈에 표 → 지도 → 거리표 → 호텔별 설명. 호텔마다 고유 색 + 번호로 구분. */
+:root{
+  --bg:#F5F7F4; --card:#FFFFFF; --fg:#1B2826; --muted:#55635F; --line:#D3DBD7; --soft:#EAEFEC;
+  --c1:#0B7285; --c2:#9C3D8B; --c3:#B4531A; --c4:#2B5CB0; --on-c:#FFFFFF;
+  --park:#CFE6D2; --road:#E1E7E3; --tanuki:#F1D9C4;
+  --tag-off-bg:#DCEFE3; --tag-off-fg:#1E5E37; --tag-ref-bg:#FFF0CC; --tag-ref-fg:#6B4A00; --tag-na-bg:#E6E9E8; --tag-na-fg:#4F5B58;
+  --warn-bg:#FFF5DB; --warn-fg:#5E4300;
+  --font:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1615; --card:#18211F; --fg:#E8EFEC; --muted:#A3B2AD; --line:#2C3A37; --soft:#202B29;
+    --c1:#3CC0D6; --c2:#D98BCB; --c3:#F09A62; --c4:#7FA8F0; --on-c:#0F1615;
+    --park:#24402B; --road:#26312E; --tanuki:#4A3524;
+    --tag-off-bg:#1F3A2A; --tag-off-fg:#9AD6B0; --tag-ref-bg:#3D3217; --tag-ref-fg:#EBCB7B; --tag-na-bg:#2B3330; --tag-na-fg:#B4BFBB;
+    --warn-bg:#352C14; --warn-fg:#EBCB7B; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1615; --card:#18211F; --fg:#E8EFEC; --muted:#A3B2AD; --line:#2C3A37; --soft:#202B29;
+  --c1:#3CC0D6; --c2:#D98BCB; --c3:#F09A62; --c4:#7FA8F0; --on-c:#0F1615;
+  --park:#24402B; --road:#26312E; --tanuki:#4A3524;
+  --tag-off-bg:#1F3A2A; --tag-off-fg:#9AD6B0; --tag-ref-bg:#3D3217; --tag-ref-fg:#EBCB7B; --tag-na-bg:#2B3330; --tag-na-fg:#B4BFBB;
+  --warn-bg:#352C14; --warn-fg:#EBCB7B; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:18px;line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 56px}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+h1,h2,h3{margin:0;line-height:1.3;text-wrap:balance}
+h1{font-size:clamp(30px,6vw,46px);font-weight:900;letter-spacing:-.02em}
+h2{font-size:clamp(24px,4.4vw,30px);font-weight:900;letter-spacing:-.01em}
+h3{font-size:22px;font-weight:700}
+p{margin:0}
+.eyebrow{font-size:15px;font-weight:700;letter-spacing:.08em;color:var(--muted)}
+header{display:flex;flex-direction:column;gap:14px}
+.lead{font-size:20px;max-width:34em}
+.jump{display:flex;flex-wrap:wrap;gap:10px}
+.jump a{padding:10px 16px;border:2px solid var(--fg);border-radius:999px;color:var(--fg);text-decoration:none;font-weight:700;font-size:16px}
+.jump a:focus-visible,.btn:focus-visible,.sel button:focus-visible,a:focus-visible{outline:3px solid var(--c4);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:16px;color:var(--muted);align-items:center}
+.legend span.item{display:inline-flex;gap:8px;align-items:center}
+.tag{display:inline-block;font-size:12.5px;font-weight:700;line-height:1;padding:4px 7px;border-radius:4px;margin-left:6px;vertical-align:2px;white-space:nowrap}
+.tag.off{background:var(--tag-off-bg);color:var(--tag-off-fg)}
+.tag.ref{background:var(--tag-ref-bg);color:var(--tag-ref-fg)}
+.tag.na{background:var(--tag-na-bg);color:var(--tag-na-fg)}
+.tag.me{background:var(--soft);color:var(--fg);border:1px solid var(--line)}
+.sec{display:flex;flex-direction:column;gap:18px;scroll-margin-top:12px}
+.note{background:var(--warn-bg);color:var(--warn-fg);padding:14px 16px;border-radius:8px;font-size:16px}
+
+/* 비교 표 (모바일에서는 항목별로 4곳을 세로로 나열) */
+.cmp{border:1px solid var(--line);border-radius:10px;background:var(--card);overflow:hidden}
+.cmp .row{display:grid;grid-template-columns:8rem repeat(4,minmax(0,1fr));border-top:1px solid var(--line)}
+.cmp .row:first-child{border-top:0}
+.cmp .row.head{position:sticky;top:env(safe-area-inset-top,0px);background:var(--card);z-index:2}
+.cmp .lab{padding:14px;font-weight:700;background:var(--soft);font-size:16px}
+.cmp .cell{padding:14px;font-size:16px;line-height:1.55;min-width:0;overflow-wrap:anywhere}
+.cmp .cell+.cell{border-left:1px solid var(--line)}
+.cmp .head .cell{font-weight:700;border-top:5px solid var(--hc);display:flex;gap:8px;align-items:flex-start;line-height:1.35}
+.cmp .head .lab{border-top:5px solid transparent}
+.num{display:inline-grid;place-items:center;flex:none;width:28px;height:28px;border-radius:50%;background:var(--hc);color:var(--on-c);font-weight:900;font-size:15px;line-height:1}
+.best{font-weight:700}
+.best::after{content:"가장 가까움";margin-left:6px;font-size:12.5px;font-weight:700;background:var(--soft);padding:3px 6px;border-radius:4px;vertical-align:2px;white-space:nowrap}
+@media (max-width:860px){
+  .cmp .row{display:block}
+  .cmp .row.head{display:none}
+  .cmp .lab{border-bottom:1px solid var(--line);font-size:17px}
+  .cmp .cell{display:block;border-left:0!important;border-top:1px solid var(--line)}
+  .cmp .lab+.cell{border-top:0}
+  .cmp .cell::before{content:attr(data-h);display:block;font-weight:700;font-size:14px;color:var(--hc);margin-bottom:2px}
+}
+
+/* 지도 */
+.mapwrap{display:grid;grid-template-columns:minmax(0,560px) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:860px){.mapwrap{grid-template-columns:minmax(0,1fr)}}
+.map{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.map svg{display:block;width:100%;height:auto;max-width:100%}
+.sel{display:flex;flex-wrap:wrap;gap:8px}
+.sel button{font:inherit;font-size:16px;font-weight:700;padding:10px 14px;border-radius:999px;border:2px solid var(--hc,var(--fg));background:var(--card);color:var(--fg);cursor:pointer;display:inline-flex;gap:8px;align-items:center;min-height:44px}
+.sel button[aria-pressed="true"]{background:var(--hc,var(--fg));color:var(--on-c)}
+.sel button[aria-pressed="true"] .num{background:var(--on-c);color:var(--hc)}
+.panel{display:flex;flex-direction:column;gap:14px}
+.panel ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column}
+.panel li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:17px}
+.panel li b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.small{font-size:15px;color:var(--muted)}
+.btn{display:inline-block;padding:12px 18px;border-radius:8px;background:var(--fg);color:var(--bg);font-weight:700;text-decoration:none;font-size:16px;min-height:44px}
+.svg-t{font-family:var(--font);fill:var(--fg);paint-order:stroke;stroke:var(--card);stroke-width:4px;stroke-linejoin:round}
+
+/* 호텔 카드 */
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+@media (max-width:860px){.cards{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-top:6px solid var(--hc);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.card .t{display:flex;gap:12px;align-items:flex-start}
+.card .t .num{width:36px;height:36px;font-size:19px}
+.card .one{font-size:19px;font-weight:500}
+.card h4{margin:0;font-size:16px;letter-spacing:.04em;color:var(--hc)}
+.card ul{margin:6px 0 0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px;font-size:17px}
+.addr{font-size:15px;color:var(--muted);line-height:1.5}
+.sel-tel{user-select:all}
+footer{font-size:15px;color:var(--muted);display:flex;flex-direction:column;gap:8px}
+footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">삿포로 · 2027년 6월 28일 출발 · 7박 8일</p>
+  <h1>삿포로 호텔 4곳 비교</h1>
+  <nav class="jump" aria-label="바로가기">
+    <a href="#compare">한눈에 보기</a><a href="#map">지도와 거리</a><a href="#hotels">호텔별 설명</a>
+  </nav>
+  <div class="legend" aria-label="표시 설명">
+    <span class="item"><span class="tag off">공식</span> 호텔 공식 사이트에서 확인</span>
+    <span class="item"><span class="tag ref">참고</span> 예약·여행 사이트 정보</span>
+    <span class="item"><span class="tag na">미확인</span> 찾지 못한 정보</span>
+  </div>
+  <noscript><p class="note">이 페이지는 JavaScript가 켜져 있어야 표와 지도가 보입니다.</p></noscript>
+</header>
+
+<section class="sec" id="compare">
+  <h2>한눈에 보기</h2>
+  <div class="cmp" id="cmp"></div>
+  <p class="small">요금은 trip.com에서 2027년 7월 2~5일로 검색한 금액입니다. 검색 조건에 따라 달라지고 예약할 때 바뀔 수 있으니 다시 확인하세요. 조식 요금과 호텔 정보는 2026년 10월 기준입니다.</p>
+</section>
+
+<section class="sec" id="map">
+  <h2>지도와 거리</h2>
+  <p class="note">이 지도는 위치 관계를 보기 위한 약식 지도입니다. 호텔 핀은 주소를 바탕으로 찍은 대략적인 위치라서 100~200m 정도 다를 수 있고, 거리는 직선거리입니다. 걸어서 몇 분인지는 위 표의 공식·참고 수치를 우선 보시고, 정확한 위치는 구글지도 버튼으로 확인하세요.</p>
+  <div class="mapwrap">
+    <div class="map" id="mapbox"></div>
+    <div class="panel">
+      <div class="sel" id="sel" role="group" aria-label="호텔 선택"></div>
+      <div id="panel"></div>
+    </div>
+  </div>
+  <h3>주요 지점까지 직선거리 (대략)</h3>
+  <div class="cmp" id="dist"></div>
+  <p class="small">직선거리는 50m 단위로 어림한 값입니다. 실제 걷는 길은 이보다 길 수 있습니다. 나카지마공원은 지도 아래쪽 밖에 있어 표에만 넣었습니다.</p>
+</section>
+
+<section class="sec" id="hotels">
+  <h2>호텔별 설명</h2>
+  <div class="cards" id="cards"></div>
+</section>
+
+</div>
+
+<script>
+(function(){
+var H=[
+{id:'hi',n:1,v:'--c1',short:'홀리데이 인',name:'홀리데이 인 스위트 삿포로 오도리 공원 바이 IHG',
+ lat:43.0580,lon:141.3481,ax:0,ay:36,
+ addr:'札幌市中央区南2条西8-6-1 (060-0062)',tel:'+81-11-272-0555',
+ gq:'Holiday Inn & Suites Sapporo Odori Park, 北海道札幌市中央区南2条西8-6-1',
+ one:'2025년 10월에 문을 연 새 호텔. 오도리공원 서쪽에 있습니다.',
+ rows:{
+  price:['조식 미포함 130만원 / 조식 포함 154만원 (조식 +24만원)','me'],
+  addr:['미나미2조 니시8초메','off'],
+  st:['오도리역 도보 약 10분','ref'],
+  park:['도보 약 5분','ref'],
+  sus:['도보로 갈 수 있는 거리','off'],
+  sap:['지하철로 오도리에서 1정거장 · 택시 약 10분','ref'],
+  bath:['최상층 대욕장·사우나, 투숙객 무료','off'],
+  bf:['2층 뷔페','off'],
+  io:['15:00 / 11:00','off'],
+  size:['195실 · 10층 · 2025년 10월 개관','off']
+ },
+ good:[['최상층 대욕장과 사우나를 투숙객은 무료로 씁니다.','off'],['24시간 헬스장, 셀프 세탁실, 짐 보관 락커가 있습니다.','off'],['오도리공원까지 도보 약 5분, 노면전차 니시8초메 정류장은 약 200m입니다.','ref'],['2025년에 지은 새 건물입니다.','off']],
+ care:[['오도리역까지 도보 약 10분으로, 네 곳 중 지하철역이 먼 편입니다.','ref'],['공항 셔틀은 없습니다.','off']]},
+{id:'ve',n:2,v:'--c2',short:'베셀 캄파나',name:'베셀 호텔 캄파나 스스키노',
+ lat:43.0548,lon:141.3500,ax:0,ay:36,
+ addr:'札幌市中央区南五条西6丁目16-1 (064-0805)',tel:'+81-11-531-8111',
+ gq:'Vessel Hotel Campana Sapporo Susukino, 北海道札幌市中央区南五条西6丁目16-1',
+ one:'스스키노 한복판. 먹고 마시는 거리 바로 옆입니다.',
+ rows:{
+  price:['조식 미포함 153만원 / 조식 포함 180만원 (조식 +27만원)','me'],
+  addr:['미나미5조 니시6초메','off'],
+  st:['스스키노역 4번 출구 도보 4분','off'],
+  park:['도보 약 11분','ref'],
+  sus:['스스키노 거리 도보 1분','ref'],
+  sap:['도보 18분 · 지하철 2정거장','ref'],
+  bath:['2층 대욕장·드라이 사우나, 투숙객 무료','off'],
+  bf:['1층 라운지 6:00~9:30 · 신선한 해물이 있어 4곳 중 가장 풍부하지만, 일찍 가지 않으면 자리가 없어 못 먹을 수도 있음','me'],
+  io:['14:00 / 11:00','off'],
+  size:['296실 · 2019년 6월 개관','off']
+ },
+ good:[['스스키노역 4번 출구에서 도보 4분, 스스키노 거리는 1분, 타누키코지는 3분입니다.','off'],['2층 대욕장과 드라이 사우나가 무료입니다. 이용 시간은 6:00~10:00, 15:00~25:00입니다.','off'],['조식은 신선한 해물이 있어 4곳 중 가장 풍부합니다. 다만 일찍 가지 않으면 자리가 없어 못 먹을 수도 있습니다.','me']],
+ care:[['삿포로역까지 도보 18분입니다. 지하철로는 2정거장입니다.','ref'],['대욕장은 문신이 있으면 제공하는 스티커(8×10cm)로 가려야 들어갈 수 있습니다.','off'],['오도리공원까지 도보 약 11분(약 0.8km)입니다.','ref']]},
+{id:'tk',n:3,v:'--c3',short:'도큐스테이',name:'도큐스테이 삿포로 오도리',
+ lat:43.0583,lon:141.3520,ax:0,ay:36,
+ addr:'札幌市中央区南2条西5-26-2 (060-0062)',tel:'+81-11-200-3109',
+ gq:'Tokyu Stay Sapporo Odori, 北海道札幌市中央区南2条西5-26-2',
+ one:'오도리역 2번 출구에서 가까운 번화가 한가운데입니다.',
+ rows:{
+  price:['조식 미포함 144만원 / 조식 포함 160만원 (조식 +16만원)','me'],
+  addr:['미나미2조 니시5초메','off'],
+  st:['오도리역 2번 출구 도보 약 3분','off'],
+  park:['3~9분 (자료마다 다름)','ref'],
+  sus:['도보 약 5분','ref'],
+  sap:['도보 약 11분 · 지하철 1정거장','ref'],
+  bath:['확인된 정보 없음','na'],
+  bf:['뷔페 · 요금 확인 못함','na'],
+  io:['15:00 / 11:00','off'],
+  size:['176실','off']
+ },
+ good:[['오도리역 2번 출구에서 도보 약 3분입니다.','off'],['타누키코지 상점가가 1~2분 거리입니다.','ref'],['스스키노까지 도보 약 5분, 삿포로역까지 지하철 1정거장입니다.','ref']],
+ care:[['대욕장 정보를 찾지 못했습니다. 필요하면 예약 전에 호텔에 문의하세요.','na'],['오도리역 3번 출구는 2024년 7월부터 닫혀 있습니다. 2번 출구를 이용하세요.','off'],['이름이 비슷한 다른 호텔 \'도큐스테이 삿포로\'(미나미1조 니시1)와 헷갈리지 마세요.','off']]},
+{id:'mg',n:4,v:'--c4',short:'미쓰이 가든',name:'미쓰이 가든 호텔 삿포로 웨스트',
+ lat:43.0670,lon:141.3470,ax:0,ay:36,
+ addr:'札幌市中央区北5条西6-2-4 (060-0005)',tel:'+81-11-218-2231',
+ gq:'Mitsui Garden Hotel Sapporo West, 北海道札幌市中央区北5条西6-2-4',
+ one:'삿포로역 바로 옆. 공항에서 오는 길이 가장 단순합니다.',
+ rows:{
+  price:['조식 미포함 138만원 / 조식 포함 162만원 (조식 +24만원)','me'],
+  addr:['기타5조 니시6초메','off'],
+  st:['JR 삿포로역 서쪽 출구 도보 4분 · 지하철역 도보 4분','off'],
+  park:['도보 약 12분','ref'],
+  sus:['걸어가기엔 먼 거리 (지하철 이용)','na'],
+  sap:['도보 4분','off'],
+  bath:['2층 대욕장, 투숙객 무료 · 15:00~다음날 9:00','off'],
+  bf:['2층 뷔페 · 성인 ¥2,970 / 어린이 ¥1,485','off'],
+  io:['15:00 / 11:00','off'],
+  size:['169실 · 13층 · 2020년 2월 개관','off']
+ },
+ good:[['삿포로역 서쪽 출구에서 도보 4분입니다. 신치토세공항에서 JR 쾌속으로 약 37~40분 걸려 삿포로역에 닿습니다.','off'],['2층 대욕장이 무료이고, 2025년 10월부터 문신 제한이 없어졌습니다.','off'],['투숙객 라운지가 15:00~23:00 열리고, 15~19시에는 간단한 단 음식도 나옵니다.','ref']],
+ care:[['오도리공원까지 도보 약 12분, 오도리역까지 약 14분이라 시내 관광은 걸어가기에 먼 편입니다.','ref'],['조식 요금은 성인 ¥2,970입니다. 2026년 2월부터 적용된 요금입니다.','off'],['대욕장은 작은 규모입니다. 이름이 비슷한 \'미쓰이 가든 호텔 삿포로\'는 다른 호텔입니다.','off']]}
+];
+var L=[
+{id:'sap',name:'삿포로역',lat:43.0687,lon:141.3508,lx:12,ly:5,a:'start',map:1},
+{id:'ods',name:'오도리역',lat:43.0603,lon:141.3538,lx:12,ly:26,a:'start',map:1},
+{id:'park',name:'오도리공원(중간쯤)',lat:43.0607,lon:141.3489,map:0},
+{id:'tv',name:'TV타워',lat:43.0611,lon:141.3564,lx:-14,ly:-12,a:'end',map:1},
+{id:'clk',name:'시계탑',lat:43.0625,lon:141.3537,lx:12,ly:5,a:'start',map:1},
+{id:'tnk',name:'타누키코지 상점가',lat:43.0580,lon:141.3525,map:0},
+{id:'sus',name:'스스키노역',lat:43.0553,lon:141.3533,lx:12,ly:5,a:'start',map:1},
+{id:'nak',name:'나카지마공원(북쪽 입구 부근)',lat:43.0478,lon:141.3540,map:0}
+];
+var ROWS=[['price','요금 (trip.com, 7월 2~5일)'],['addr','위치'],['st','가까운 역'],['park','오도리공원'],['sus','스스키노'],['sap','삿포로역'],['bath','대욕장'],['bf','조식 (뷔페)'],['io','체크인 / 아웃'],['size','규모']];
+function tag(t){return t.split(',').filter(function(x){return x!=='me';}).map(function(x){return '<span class="tag '+x+'">'+({off:'공식',ref:'참고',na:'미확인',me:'지우 확인'})[x]+'</span>';}).join('');}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function dist(a,b){var R=6371000,r=Math.PI/180,dl=(b.lat-a.lat)*r,dn=(b.lon-a.lon)*r;
+  var x=Math.sin(dl/2)*Math.sin(dl/2)+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dn/2)*Math.sin(dn/2);
+  return 2*R*Math.asin(Math.sqrt(x));}
+function fmt(m){return m<1000?'약 '+(Math.round(m/50)*50)+'m':'약 '+(m/1000).toFixed(1)+'km';}
+function P(o){return [(o.lon-141.3430)*40650,(43.0700-o.lat)*55660];}
+function gmap(h){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(h.gq);}
+function style(h){return '--hc:var('+h.v+')';}
+
+/* 한눈에 보기 */
+var c='<div class="row head"><div class="lab"></div>'+H.map(function(h){return '<div class="cell" style="'+style(h)+'"><span class="num">'+h.n+'</span><span>'+esc(h.name)+'</span></div>';}).join('')+'</div>';
+ROWS.forEach(function(r){
+  c+='<div class="row"><div class="lab">'+r[1]+'</div>'+H.map(function(h){var v=h.rows[r[0]];
+    return '<div class="cell" style="'+style(h)+'" data-h="'+h.n+'. '+esc(h.short)+'">'+esc(v[0])+tag(v[1])+'</div>';}).join('')+'</div>';
+});
+document.getElementById('cmp').innerHTML=c;
+
+/* 거리표 */
+var d='<div class="row head"><div class="lab"></div>'+H.map(function(h){return '<div class="cell" style="'+style(h)+'"><span class="num">'+h.n+'</span><span>'+esc(h.short)+'</span></div>';}).join('')+'</div>';
+L.forEach(function(l){
+  var ds=H.map(function(h){return dist(h,l);}),mn=Math.min.apply(null,ds);
+  d+='<div class="row"><div class="lab">'+esc(l.name)+'</div>'+H.map(function(h,i){
+    return '<div class="cell'+(ds[i]===mn?' best':'')+'" style="'+style(h)+'" data-h="'+h.n+'. '+esc(h.short)+'">'+fmt(ds[i])+'</div>';}).join('')+'</div>';
+});
+document.getElementById('dist').innerHTML=d;
+
+/* 지도 */
+var sel=null;
+function mapSVG(){
+  var W=650,Hh=1030,s='<svg viewBox="0 0 '+W+' '+Hh+'" role="img" aria-label="삿포로 중심가 약식 지도. 호텔 4곳과 주요 지점의 위치 관계">';
+  s+='<rect width="'+W+'" height="'+Hh+'" fill="var(--soft)"/>';
+  var a=P({lat:43.0611,lon:141.3563}),b=P({lat:43.0603,lon:141.3420});
+  s+='<rect x="0" y="'+a[1]+'" width="'+a[0]+'" height="'+(b[1]-a[1])+'" fill="var(--park)"/>';
+  s+='<text class="svg-t" x="30" y="'+(a[1]+(b[1]-a[1])/2+6)+'" font-size="17" font-weight="700" style="stroke:var(--park)">오도리공원</text>';
+  var t1=P({lat:43.0580,lon:141.3563}),t2=P({lat:43.0580,lon:141.3431});
+  var tx=P({lat:43.0580,lon:141.3563})[0],tx2=P({lat:43.0580,lon:141.3481})[0]+40;
+  s+='<rect x="'+tx2+'" y="'+(t1[1]-7)+'" width="'+(tx-tx2)+'" height="14" fill="var(--tanuki)"/>';
+  s+='<text class="svg-t" x="'+(tx-4)+'" y="'+(t1[1]+28)+'" text-anchor="end" font-size="14" style="stroke:var(--soft)">타누키코지 상점가</text>';
+  var A=P(L[0]),B=P(L[1]),C=P(L[6]);
+  s+='<polyline points="'+A.join(',')+' '+B.join(',')+' '+C.join(',')+'" fill="none" stroke="var(--muted)" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/>';
+  s+='<text class="svg-t" x="'+(B[0]+14)+'" y="'+(B[1]+210)+'" font-size="13" style="fill:var(--muted);stroke:var(--soft)">지하철 난보쿠선(약식)</text>';
+  L.forEach(function(l){if(!l.map)return;var p=P(l);
+    s+='<rect x="'+(p[0]-6)+'" y="'+(p[1]-6)+'" width="12" height="12" fill="var(--fg)" transform="rotate(45 '+p[0]+' '+p[1]+')"/>';
+    s+='<text class="svg-t" x="'+(p[0]+l.lx)+'" y="'+(p[1]+l.ly)+'" text-anchor="'+l.a+'" font-size="16" font-weight="700" style="stroke:var(--soft)">'+l.name+'</text>';});
+  if(sel!==null){var h=H[sel],hp=P(h);
+    L.forEach(function(l){if(!l.map&&l.id!=='park'&&l.id!=='tnk')return;var p=P(l);
+      s+='<line x1="'+hp[0]+'" y1="'+hp[1]+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="var('+h.v+')" stroke-width="2.5" stroke-dasharray="7 6"/>';
+      var mx=(hp[0]+p[0])/2,my=(hp[1]+p[1])/2;
+      s+='<text class="svg-t" x="'+mx+'" y="'+my+'" text-anchor="middle" font-size="15" font-weight="700" style="fill:var('+h.v+');stroke:var(--soft)">'+fmt(dist(h,l)).replace('약 ','')+'</text>';});}
+  H.forEach(function(h,i){var p=P(h),dim=(sel!==null&&sel!==i);
+    s+='<g tabindex="0" role="button" aria-label="'+h.n+'번 '+esc(h.name)+'" style="cursor:pointer;outline:none" opacity="'+(dim?0.4:1)+'" data-i="'+i+'">';
+    s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(sel===i?20:17)+'" fill="var('+h.v+')" stroke="var(--card)" stroke-width="3"/>';
+    s+='<text x="'+p[0]+'" y="'+(p[1]+7)+'" text-anchor="middle" font-size="19" font-weight="900" style="fill:var(--on-c);font-family:var(--font)">'+h.n+'</text>';
+    s+='<text class="svg-t" x="'+p[0]+'" y="'+(p[1]+h.ay+ (sel===i?4:0))+'" text-anchor="middle" font-size="17" font-weight="900" style="stroke:var(--soft)">'+esc(h.short)+'</text></g>';});
+  s+='<line x1="24" y1="990" x2="274" y2="990" stroke="var(--fg)" stroke-width="3"/><text class="svg-t" x="24" y="978" font-size="14" style="stroke:var(--soft)">500m</text>';
+  s+='<text class="svg-t" x="'+(W-20)+'" y="40" text-anchor="end" font-size="15" font-weight="700" style="stroke:var(--soft)">북 ↑</text>';
+  s+='<text class="svg-t" x="'+(W-20)+'" y="1008" text-anchor="end" font-size="14" style="fill:var(--muted);stroke:var(--soft)">↓ 나카지마공원은 이 아래쪽</text>';
+  return s+'</svg>';
+}
+function render(){
+  document.getElementById('mapbox').innerHTML=mapSVG();
+  var b='<button type="button" aria-pressed="'+(sel===null)+'" data-i="all">전체</button>'+H.map(function(h,i){
+    return '<button type="button" style="'+style(h)+'" aria-pressed="'+(sel===i)+'" data-i="'+i+'"><span class="num">'+h.n+'</span>'+esc(h.short)+'</button>';}).join('');
+  document.getElementById('sel').innerHTML=b;
+  var p='';
+  if(sel===null){p='<p>호텔 번호를 누르면 그 호텔에서 주요 지점까지 선이 그려지고 거리가 나옵니다. 지도의 핀을 눌러도 됩니다.</p>';}
+  else{var h=H[sel];
+    p='<h3 style="color:var('+h.v+')">'+h.n+'. '+esc(h.name)+'</h3><p class="addr">'+esc(h.addr)+'<br>전화 <span class="sel-tel">'+h.tel+'</span></p><ul>'+
+      L.map(function(l){return {l:l,m:dist(h,l)};}).sort(function(x,y){return x.m-y.m;}).map(function(o){return '<li><span>'+esc(o.l.name)+'</span><b>'+fmt(o.m)+'</b></li>';}).join('')+'</ul>'+
+      '<p class="small">직선거리 · 대략 값</p><p><a class="btn" href="'+gmap(h)+'" target="_blank" rel="noopener">구글지도에서 정확한 위치 보기</a></p>';}
+  document.getElementById('panel').innerHTML=p;
+}
+function pick(v){sel=(v==='all'||v===sel)?null:Number(v);render();}
+document.getElementById('sel').addEventListener('click',function(e){var b=e.target.closest('button');if(b)pick(b.getAttribute('data-i'));});
+document.getElementById('mapbox').addEventListener('click',function(e){var g=e.target.closest('g[data-i]');if(g)pick(g.getAttribute('data-i'));});
+document.getElementById('mapbox').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){var g=e.target.closest('g[data-i]');if(g){e.preventDefault();pick(g.getAttribute('data-i'));}}});
+render();
+
+/* 호텔 카드 */
+document.getElementById('cards').innerHTML=H.map(function(h){
+  function li(a){return a.map(function(x){return '<li>'+esc(x[0])+tag(x[1])+'</li>';}).join('');}
+  return '<article class="card" style="'+style(h)+'"><div class="t"><span class="num">'+h.n+'</span><h3>'+esc(h.name)+'</h3></div>'+
+    '<p class="one">'+esc(h.one)+'</p>'+
+    '<div><h4>좋은 점</h4><ul>'+li(h.good)+'</ul></div>'+
+    '<div><h4>알아둘 점</h4><ul>'+li(h.care)+'</ul></div>'+
+    '<p class="addr">'+esc(h.addr)+'<br>전화 <span class="sel-tel">'+h.tel+'</span></p>'+
+    '<p><a class="btn" href="'+gmap(h)+'" target="_blank" rel="noopener">구글지도에서 보기</a></p></article>';
+}).join('');
+})();
+</script>
+
+</body>
+</html>
