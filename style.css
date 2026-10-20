@@ -1,0 +1,584 @@
+/* Layout: 큰 글씨 한 칼럼. 위에서부터 한눈에 표 → 지도 → 거리표 → 호텔별 설명. 호텔마다 고유 색 + 번호로 구분. */
+
+/* ===== 색상 · 글꼴 ===== */
+:root {
+  /* 기본 */
+  --bg: #F5F7F4;
+  --card: #FFFFFF;
+  --fg: #1B2826;
+  --muted: #55635F;
+  --line: #D3DBD7;
+  --soft: #EAEFEC;
+
+  /* 호텔 1~4 고유 색 */
+  --c1: #0B7285;
+  --c2: #9C3D8B;
+  --c3: #B4531A;
+  --c4: #2B5CB0;
+  --on-c: #FFFFFF;
+
+  /* 지도 */
+  --park: #CFE6D2;
+  --road: #E1E7E3;
+  --tanuki: #F1D9C4;
+
+  /* 출처 태그 (공식 / 참고 / 미확인) */
+  --tag-off-bg: #DCEFE3;
+  --tag-off-fg: #1E5E37;
+  --tag-ref-bg: #FFF0CC;
+  --tag-ref-fg: #6B4A00;
+  --tag-na-bg: #E6E9E8;
+  --tag-na-fg: #4F5B58;
+
+  /* 안내 상자 */
+  --warn-bg: #FFF5DB;
+  --warn-fg: #5E4300;
+
+  --font: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+/* 다크 모드: 시스템 설정이 다크일 때 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1615;
+    --card: #18211F;
+    --fg: #E8EFEC;
+    --muted: #A3B2AD;
+    --line: #2C3A37;
+    --soft: #202B29;
+
+    --c1: #3CC0D6;
+    --c2: #D98BCB;
+    --c3: #F09A62;
+    --c4: #7FA8F0;
+    --on-c: #0F1615;
+
+    --park: #24402B;
+    --road: #26312E;
+    --tanuki: #4A3524;
+
+    --tag-off-bg: #1F3A2A;
+    --tag-off-fg: #9AD6B0;
+    --tag-ref-bg: #3D3217;
+    --tag-ref-fg: #EBCB7B;
+    --tag-na-bg: #2B3330;
+    --tag-na-fg: #B4BFBB;
+
+    --warn-bg: #352C14;
+    --warn-fg: #EBCB7B;
+    color-scheme: dark;
+  }
+}
+
+/* 다크 모드: 직접 지정했을 때 */
+:root[data-theme="dark"] {
+  --bg: #0F1615;
+  --card: #18211F;
+  --fg: #E8EFEC;
+  --muted: #A3B2AD;
+  --line: #2C3A37;
+  --soft: #202B29;
+
+  --c1: #3CC0D6;
+  --c2: #D98BCB;
+  --c3: #F09A62;
+  --c4: #7FA8F0;
+  --on-c: #0F1615;
+
+  --park: #24402B;
+  --road: #26312E;
+  --tanuki: #4A3524;
+
+  --tag-off-bg: #1F3A2A;
+  --tag-off-fg: #9AD6B0;
+  --tag-ref-bg: #3D3217;
+  --tag-ref-fg: #EBCB7B;
+  --tag-na-bg: #2B3330;
+  --tag-na-fg: #B4BFBB;
+
+  --warn-bg: #352C14;
+  --warn-fg: #EBCB7B;
+  color-scheme: dark;
+}
+
+/* ===== 기본 ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: 18px;
+  line-height: 1.65;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 56px;
+}
+
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(30px, 6vw, 46px);
+  font-weight: 900;
+  letter-spacing: -.02em;
+}
+
+h2 {
+  font-size: clamp(24px, 4.4vw, 30px);
+  font-weight: 900;
+  letter-spacing: -.01em;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+p {
+  margin: 0;
+}
+
+/* ===== 머리말 ===== */
+.eyebrow {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--muted);
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lead {
+  font-size: 20px;
+  max-width: 34em;
+}
+
+.jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.jump a {
+  padding: 10px 16px;
+  border: 2px solid var(--fg);
+  border-radius: 999px;
+  color: var(--fg);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.jump a:focus-visible,
+.btn:focus-visible,
+.sel button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--c4);
+  outline-offset: 2px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-size: 16px;
+  color: var(--muted);
+  align-items: center;
+}
+
+.legend span.item {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ===== 출처 태그 ===== */
+.tag {
+  display: inline-block;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 4px 7px;
+  border-radius: 4px;
+  margin-left: 6px;
+  vertical-align: 2px;
+  white-space: nowrap;
+}
+
+.tag.off {
+  background: var(--tag-off-bg);
+  color: var(--tag-off-fg);
+}
+
+.tag.ref {
+  background: var(--tag-ref-bg);
+  color: var(--tag-ref-fg);
+}
+
+.tag.na {
+  background: var(--tag-na-bg);
+  color: var(--tag-na-fg);
+}
+
+.tag.me {
+  background: var(--soft);
+  color: var(--fg);
+  border: 1px solid var(--line);
+}
+
+/* ===== 섹션 공통 ===== */
+.sec {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  scroll-margin-top: 12px;
+}
+
+.note {
+  background: var(--warn-bg);
+  color: var(--warn-fg);
+  padding: 14px 16px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+/* ===== 비교 표 (모바일에서는 항목별로 4곳을 세로로 나열) ===== */
+.cmp {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  overflow: hidden;
+}
+
+.cmp .row {
+  display: grid;
+  grid-template-columns: 8rem repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+}
+
+.cmp .row:first-child {
+  border-top: 0;
+}
+
+.cmp .row.head {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  z-index: 2;
+}
+
+.cmp .lab {
+  padding: 14px;
+  font-weight: 700;
+  background: var(--soft);
+  font-size: 16px;
+}
+
+.cmp .cell {
+  padding: 14px;
+  font-size: 16px;
+  line-height: 1.55;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.cmp .cell + .cell {
+  border-left: 1px solid var(--line);
+}
+
+.cmp .head .cell {
+  font-weight: 700;
+  border-top: 5px solid var(--hc);
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  line-height: 1.35;
+}
+
+.cmp .head .lab {
+  border-top: 5px solid transparent;
+}
+
+/* 호텔 번호 동그라미 */
+.num {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--hc);
+  color: var(--on-c);
+  font-weight: 900;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.best {
+  font-weight: 700;
+}
+
+.best::after {
+  content: "가장 가까움";
+  margin-left: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  background: var(--soft);
+  padding: 3px 6px;
+  border-radius: 4px;
+  vertical-align: 2px;
+  white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+  .cmp .row {
+    display: block;
+  }
+
+  .cmp .row.head {
+    display: none;
+  }
+
+  .cmp .lab {
+    border-bottom: 1px solid var(--line);
+    font-size: 17px;
+  }
+
+  .cmp .cell {
+    display: block;
+    border-left: 0 !important;
+    border-top: 1px solid var(--line);
+  }
+
+  .cmp .lab + .cell {
+    border-top: 0;
+  }
+
+  .cmp .cell::before {
+    content: attr(data-h);
+    display: block;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--hc);
+    margin-bottom: 2px;
+  }
+}
+
+/* ===== 지도 ===== */
+.mapwrap {
+  display: grid;
+  grid-template-columns: minmax(0, 560px) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .mapwrap {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.map {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.map svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+/* 호텔 선택 버튼 */
+.sel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sel button {
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 2px solid var(--hc, var(--fg));
+  background: var(--card);
+  color: var(--fg);
+  cursor: pointer;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 44px;
+}
+
+.sel button[aria-pressed="true"] {
+  background: var(--hc, var(--fg));
+  color: var(--on-c);
+}
+
+.sel button[aria-pressed="true"] .num {
+  background: var(--on-c);
+  color: var(--hc);
+}
+
+/* 지도 옆 거리 패널 */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.panel ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 0;
+  border-top: 1px solid var(--line);
+  font-size: 17px;
+}
+
+.panel li b {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.small {
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 8px;
+  background: var(--fg);
+  color: var(--bg);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 16px;
+  min-height: 44px;
+}
+
+/* 지도 안 글자 (테두리를 둘러 배경 위에서도 잘 보이게) */
+.svg-t {
+  font-family: var(--font);
+  fill: var(--fg);
+  paint-order: stroke;
+  stroke: var(--card);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+/* ===== 호텔 카드 ===== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 860px) {
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 6px solid var(--hc);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.card .t {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.card .t .num {
+  width: 36px;
+  height: 36px;
+  font-size: 19px;
+}
+
+.card .one {
+  font-size: 19px;
+  font-weight: 500;
+}
+
+.card h4 {
+  margin: 0;
+  font-size: 16px;
+  letter-spacing: .04em;
+  color: var(--hc);
+}
+
+.card ul {
+  margin: 6px 0 0;
+  padding-left: 1.1em;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 17px;
+}
+
+.addr {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.sel-tel {
+  user-select: all;
+}
+
+/* ===== 꼬리말 ===== */
+footer {
+  font-size: 15px;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+footer a {
+  color: var(--muted);
+}
