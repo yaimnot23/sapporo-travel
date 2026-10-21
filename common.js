@@ -20,13 +20,42 @@ export const DAY_START = 6 * 60;
 export const DAY_END = 22 * 60;
 export const SNAP = 15;
 
-// 숙소 (B안 견적서의 호텔). 길찾기 출발지와 거리 계산에 씁니다.
-export const HOTEL = {
-  name: '마이스테이즈 프리미어 삿포로 파크',
-  query: 'Hotel MyStays Premier Sapporo Park',
-  lat: 43.0484,
-  lng: 141.3560,
-};
+// 길찾기 출발 호텔 (B안 호텔 + A안 호텔 두 곳). 장소 검색 · 일정 편집 창에서 골라 씁니다.
+// lat/lng가 없는 곳은 직선거리를 표시하지 않습니다.
+export const HOTELS = [
+  { id: 'b-park', plan: 'B안', short: '프리미어 파크', name: '마이스테이즈 프리미어 삿포로 파크',
+    query: 'Hotel MyStays Premier Sapporo Park', lat: 43.0484, lng: 141.3560 },
+  { id: 'a-mitsui', plan: 'A안', short: '미쓰이 가든', name: '미쓰이 가든 호텔 삿포로 웨스트',
+    query: 'Mitsui Garden Hotel Sapporo West', lat: 43.0670, lng: 141.3470 },
+  { id: 'a-classe', plan: 'A안', short: '키타히로시마 클래스', name: '키타히로시마 클래스 호텔 (札幌北広島クラッセホテル)',
+    query: '札幌北広島クラッセホテル 北広島市中の沢316-1', lat: null, lng: null },
+];
+
+const ORIGIN_STORAGE = 'sapporo.originHotel';
+
+// 지금 고른 출발 호텔 (처음엔 B안 호텔)
+export function originHotel() {
+  return HOTELS.find((h) => h.id === storageGet(ORIGIN_STORAGE)) || HOTELS[0];
+}
+
+// 출발 호텔을 바꾸면 'originchange' 이벤트로 검색 결과 · 편집 창이 다시 그려짐
+export function setOriginHotel(id) {
+  storageSet(ORIGIN_STORAGE, id);
+  window.dispatchEvent(new Event('originchange'));
+}
+
+// 출발 호텔 고르기 버튼 (data-origin 클릭은 각 화면에서 처리)
+export function originPickerHTML() {
+  const current = originHotel().id;
+  return `
+    <div class="origin-pick" role="group" aria-label="길찾기 출발 호텔">
+      <span class="origin-lab">출발 호텔</span>
+      ${HOTELS.map((h) => `
+        <button type="button" data-origin="${h.id}" aria-pressed="${h.id === current}">
+          <small>${h.plan}</small>${h.short}
+        </button>`).join('')}
+    </div>`;
+}
 
 /* ===== 새 계획을 만들 때 미리 넣어 두는 고정 일정 ===== */
 // 티오프 시간은 아직 안 나와서 대략적인 시간으로 넣고 메모에 적어 둡니다.

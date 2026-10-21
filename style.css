@@ -943,6 +943,57 @@ button.btn:disabled {
   border-color: var(--fg);
 }
 
+/* 길찾기 출발 호텔 고르기 */
+.origin-pick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.origin-lab {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-right: 4px;
+}
+
+.origin-pick button {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.origin-pick button small {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.origin-pick button[aria-pressed="true"] {
+  border-color: var(--fg);
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.origin-pick button[aria-pressed="true"] small {
+  color: var(--bg);
+}
+
+.origin-pick button:focus-visible {
+  outline: 3px solid var(--c4);
+  outline-offset: 2px;
+}
+
 .results {
   list-style: none;
   margin: 0;

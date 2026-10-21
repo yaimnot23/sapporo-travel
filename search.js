@@ -4,7 +4,9 @@
  * 구글 지도 코드는 처음 검색할 때만 불러옵니다(하루 사용량 절약).
  * API 키는 Google Cloud에서 yaimnot23.github.io 에서만 쓰이도록 잠가 두었습니다.
  */
-import { HOTEL, esc, dayLabel, fmtTime, distanceKm, directionsUrl, toast } from './common.js';
+import {
+  esc, dayLabel, fmtTime, distanceKm, directionsUrl, toast, originHotel, setOriginHotel, originPickerHTML,
+} from './common.js';
 import { firebaseConfig } from './firebase-config.js';
 import * as store from './store.js';
 
@@ -171,18 +173,19 @@ function planStatus(placeId) {
 }
 
 function resultHTML(p, i) {
-  const dist = p.lat != null ? distanceKm(HOTEL, p) : null;
+  const origin = originHotel();
+  const dist = p.lat != null && origin.lat != null ? distanceKm(origin, p) : null;
   const closed = p.status === 'CLOSED_PERMANENTLY' ? '폐업한 곳으로 나와요'
     : p.status === 'CLOSED_TEMPORARILY' ? '임시 휴업 중으로 나와요' : '';
   const inPlan = planStatus(p.id);
-  const route = directionsUrl(HOTEL, { name: p.name, placeId: p.id });
+  const route = directionsUrl(origin, { name: p.name, placeId: p.id });
   return `
     <li class="result" data-i="${i}">
       <div class="r-main">
         <h3>${esc(p.name)}</h3>
         <p class="r-meta">${metaLine(p)}</p>
         <p class="addr">${esc(p.address)}</p>
-        ${dist != null ? `<p class="small">호텔에서 직선 약 ${dist < 10 ? dist.toFixed(1) : Math.round(dist)}km</p>` : ''}
+        ${dist != null ? `<p class="small">${esc(origin.short)}에서 직선 약 ${dist < 10 ? dist.toFixed(1) : Math.round(dist)}km</p>` : ''}
         ${closed ? `<p class="r-warn">${closed}</p>` : ''}
       </div>
       ${p.hoursText ? `<details class="r-more"><summary>영업시간</summary><ul>${p.hoursText.map((t) => `<li>${esc(t)}</li>`).join('')}</ul></details>` : ''}
@@ -190,7 +193,7 @@ function resultHTML(p, i) {
       <div class="r-actions">
         <button type="button" class="btn" data-add="${i}">계획에 추가</button>
         ${p.mapsUrl ? `<a class="btn-ghost" href="${esc(p.mapsUrl)}" target="_blank" rel="noopener">구글지도</a>` : ''}
-        <a class="btn-ghost" href="${esc(route)}" target="_blank" rel="noopener">호텔에서 가는 길</a>
+        <a class="btn-ghost" href="${esc(route)}" target="_blank" rel="noopener">${esc(origin.short)}에서 가는 길</a>
       </div>
       <p class="r-status small" data-status="${esc(p.id)}">${esc(inPlan)}</p>
     </li>`;
@@ -258,6 +261,21 @@ resultsEl.addEventListener('toggle', (e) => {
     box.append(p);
   }
 }, true);
+
+// 길찾기 출발 호텔 고르기 (B안 / A안 두 곳)
+const originEl = document.getElementById('originPick');
+function renderOrigin() {
+  originEl.innerHTML = originPickerHTML();
+}
+originEl.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-origin]');
+  if (b) setOriginHotel(b.getAttribute('data-origin'));
+});
+window.addEventListener('originchange', () => {
+  renderOrigin();
+  if (results.length) resultsEl.innerHTML = results.map(resultHTML).join('');
+});
+renderOrigin();
 
 store.subscribe((s) => {
   storeState = s;

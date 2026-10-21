@@ -7,8 +7,9 @@
  * - 최근 변경: 누가 무엇을 바꿨는지 + 되돌리기
  */
 import {
-  DAYS, DAY_START, DAY_END, SNAP, HOTEL,
+  DAYS, DAY_START, DAY_END, SNAP,
   esc, fmtTime, fmtDur, dayInfo, dayLabel, snap, clamp, hoursCheck, directionsUrl, toast,
+  originHotel, setOriginHotel, originPickerHTML,
   storageGet, storageSet,
 } from './common.js';
 import * as store from './store.js';
@@ -560,11 +561,12 @@ function placeInfoHTML(item, day, start) {
     lines.push(`<details class="r-more"><summary>영업시간</summary><ul>${p.hoursText.map((t) => `<li>${esc(t)}</li>`).join('')}</ul></details>`);
   }
 
-  // 길찾기: 호텔에서 / 바로 앞 일정 장소에서
+  // 길찾기: 고른 호텔에서 / 바로 앞 일정 장소에서
   const links = [];
   const here = { name: p.name, placeId: p.id };
+  const origin = originHotel();
   if (p.mapsUrl) links.push(`<a class="btn-ghost" href="${esc(p.mapsUrl)}" target="_blank" rel="noopener">구글지도</a>`);
-  links.push(`<a class="btn-ghost" href="${esc(directionsUrl(HOTEL, here))}" target="_blank" rel="noopener">호텔에서 가는 길</a>`);
+  links.push(`<a class="btn-ghost" href="${esc(directionsUrl(origin, here))}" target="_blank" rel="noopener">${esc(origin.short)}에서 가는 길</a>`);
   if (day) {
     const prev = itemsOn(day).filter((o) => o.id !== editing.id && o.place && o.end <= start).pop();
     if (prev) {
@@ -572,6 +574,7 @@ function placeInfoHTML(item, day, start) {
       links.push(`<a class="btn-ghost" href="${esc(url)}" target="_blank" rel="noopener">앞 일정(${esc(prev.title)})에서 가는 길</a>`);
     }
   }
+  lines.push(originPickerHTML());
   lines.push(`<div class="r-actions">${links.join('')}</div>`);
   return lines.join('');
 }
@@ -638,3 +641,12 @@ form.querySelector('[data-dlg="delete"]').addEventListener('click', () => {
 });
 
 form.querySelector('[data-dlg="close"]').addEventListener('click', () => dialog.close());
+
+// 편집 창 안에서 출발 호텔 바꾸기 (장소 검색 탭과 같은 설정)
+document.getElementById('dlgPlace').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-origin]');
+  if (b) setOriginHotel(b.getAttribute('data-origin'));
+});
+window.addEventListener('originchange', () => {
+  if (dialog.open && editing) refreshDialog();
+});
