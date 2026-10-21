@@ -67,6 +67,7 @@
     setText('cLodge', format(LODGE_WON));
     setText('cTrans', format(transWon));
     setText('cRound', format(roundWon));
+    setText('cMore', total > B_TOTAL_WON ? 'A안이' : 'B안이'); // 환율이 아주 높으면 A안이 더 비쌀 수 있음
     setText('cDiff', format(Math.abs(B_TOTAL_WON - total)));
     setText('cPct', Math.round(total / B_TOTAL_WON * 100));
     setText('cYenShare', Math.round((transWon + roundWon) / 10000)); // 만원 단위
