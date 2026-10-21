@@ -37,6 +37,9 @@
   /* 경비 탭 강조색 */
   --accent: #2F5D3A;
 
+  /* 경고 · 삭제 */
+  --danger: #B42318;
+
   --font: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 }
 
@@ -71,6 +74,7 @@
     --warn-fg: #EBCB7B;
 
     --accent: #8FCB9B;
+    --danger: #FF8A80;
     color-scheme: dark;
   }
 }
@@ -105,6 +109,7 @@
   --warn-fg: #EBCB7B;
 
   --accent: #8FCB9B;
+  --danger: #FF8A80;
   color-scheme: dark;
 }
 
@@ -790,6 +795,844 @@ a:focus-visible {
   .cost td {
     padding: 10px 8px;
     font-size: 15px;
+  }
+}
+
+/* ===== 공통: 숨김 · 작은 버튼 · 알림 ===== */
+[hidden] {
+  display: none !important;
+}
+
+button.btn {
+  border: 0;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button.btn:disabled {
+  opacity: .6;
+  cursor: default;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 8px 14px;
+  min-height: 40px;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--fg);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-ghost:hover {
+  border-color: var(--fg);
+}
+
+.btn-ghost.sm {
+  min-height: 32px;
+  padding: 4px 10px;
+  font-size: 14px;
+  flex: none;
+}
+
+.btn-ghost.danger {
+  color: var(--danger);
+}
+
+.link-btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.btn-ghost:focus-visible,
+.link-btn:focus-visible,
+.quick-btn:focus-visible,
+.day-pick button:focus-visible {
+  outline: 3px solid var(--c4);
+  outline-offset: 2px;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: max(24px, env(safe-area-inset-bottom, 0px));
+  transform: translate(-50%, 20px);
+  max-width: calc(100% - 32px);
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 16px;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s, transform .2s;
+  z-index: 300;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (max-width: 480px) {
+  .tab {
+    font-size: 16px;
+    padding: 10px 4px;
+  }
+}
+
+/* ===== 장소 검색 탭 ===== */
+.search-bar {
+  display: flex;
+  gap: 8px;
+}
+
+.search-bar input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: 17px;
+  padding: 10px 14px;
+  min-height: 48px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--fg);
+}
+
+.search-bar input:focus-visible {
+  outline: 3px solid var(--c4);
+  outline-offset: 1px;
+}
+
+.quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quick-btn {
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 8px 14px;
+  min-height: 40px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.quick-btn:hover {
+  border-color: var(--fg);
+}
+
+.results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 860px) {
+  .results {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.result {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.r-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.result h3 {
+  font-size: 19px;
+}
+
+.r-meta {
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.r-warn {
+  color: var(--danger);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.r-more summary {
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.r-more ul {
+  margin: 6px 0 0;
+  padding-left: 1.1em;
+  font-size: 15px;
+}
+
+.r-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 8px 0 4px;
+}
+
+.r-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.r-status {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.r-status:empty {
+  display: none;
+}
+
+/* ===== 일정 계획 탭 ===== */
+.plan {
+  --hh: 52px; /* 시간표 1시간 높이 */
+}
+
+#planRoot {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 일정 종류별 색 */
+.k-fixed  { --kc: var(--accent); }
+.k-place  { --kc: var(--c4); }
+.k-custom { --kc: var(--c3); }
+
+.only-narrow {
+  display: none;
+}
+
+/* 연결 안내 */
+.plan-connect {
+  max-width: 640px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.plan-connect hr {
+  width: 100%;
+  margin: 4px 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.connect-form,
+.share-row {
+  display: flex;
+  gap: 8px;
+}
+
+.connect-form input,
+.share-row input,
+.me input {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  font: inherit;
+  font-size: 15px;
+  padding: 8px 12px;
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* 공유 링크 · 이름 · 저장 상태 */
+.plan-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 12px 20px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+
+.plan-bar label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.plan-bar .small {
+  margin-top: 4px;
+}
+
+.sync {
+  grid-column: 1 / -1;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.sync[data-state="ok"]     { color: var(--accent); }
+.sync[data-state="saving"] { color: var(--muted); }
+.sync[data-state="off"]    { color: var(--danger); }
+
+/* 대기함 */
+.tray {
+  background: var(--card);
+  border: 2px dashed var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tray.drop-on {
+  border-color: var(--c4);
+  background: color-mix(in srgb, var(--c4) 8%, var(--card));
+}
+
+.tray-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tray-head h2 {
+  font-size: 22px;
+}
+
+.count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 15px;
+  vertical-align: 3px;
+}
+
+.count:empty {
+  display: none;
+}
+
+.chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chips .empty {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.chip {
+  max-width: 280px;
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  font: inherit;
+  text-align: left;
+  color: var(--fg);
+  background: color-mix(in srgb, var(--kc) 10%, var(--card));
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--kc);
+  border-radius: 8px;
+  cursor: grab;
+  user-select: none;
+}
+
+.chip b {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.chip span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* 날짜 고르기 (휴대폰에서만) */
+.day-pick {
+  display: none;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.day-pick button {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 8px 12px;
+  min-height: 52px;
+  font: inherit;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.day-pick button b {
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.day-pick button span {
+  font-size: 12.5px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.day-pick button[aria-pressed="true"] {
+  background: var(--fg);
+  border-color: var(--fg);
+  color: var(--bg);
+}
+
+.day-pick button[aria-pressed="true"] span {
+  color: var(--bg);
+}
+
+/* 시간표 */
+.timeline {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.tl-head,
+.tl-body {
+  display: grid;
+  grid-template-columns: 52px repeat(8, minmax(0, 1fr));
+}
+
+.tl-head {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+  border-radius: 10px 10px 0 0;
+}
+
+.tl-day {
+  min-width: 0;
+  padding: 8px 6px;
+  border-left: 1px solid var(--line);
+}
+
+.tl-day b {
+  display: block;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.tl-day small {
+  display: block;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tl-gutter,
+.tl-col {
+  position: relative;
+  height: calc(16 * var(--hh));
+}
+
+.tl-gutter span {
+  position: absolute;
+  right: 6px;
+  top: calc(var(--s) * var(--hh) / 60);
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.tl-gutter span:first-child {
+  transform: none;
+}
+
+.tl-gutter span:last-child {
+  transform: translateY(-100%);
+}
+
+.tl-col {
+  min-width: 0;
+  border-left: 1px solid var(--line);
+  background-image: repeating-linear-gradient(to bottom, var(--line) 0 1px, transparent 1px var(--hh));
+}
+
+/* 시간표 위 일정 칸 */
+.blk {
+  position: absolute;
+  top: calc(var(--s) * var(--hh) / 60 + 1px);
+  height: calc(var(--d) * var(--hh) / 60 - 2px);
+  left: calc(100% / var(--lanes) * var(--lane) + 2px);
+  width: calc(100% / var(--lanes) - 4px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 2px 6px;
+  overflow: hidden;
+  font: inherit;
+  text-align: left;
+  color: var(--fg);
+  background: color-mix(in srgb, var(--kc) 16%, var(--card));
+  border: 1px solid color-mix(in srgb, var(--kc) 45%, var(--card));
+  border-left: 4px solid var(--kc);
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.blk-time {
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.blk-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+/* 45분 이하 짧은 일정: 시간과 제목을 한 줄로 */
+.blk.short {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  padding-block: 0;
+}
+
+.blk.short span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.blk.short .blk-time {
+  flex: none;
+}
+
+.blk.has-warn {
+  border-color: var(--danger);
+  border-left-color: var(--kc);
+}
+
+.blk.has-warn .blk-title {
+  color: var(--danger);
+}
+
+/* 아래 끝을 끌어 길이 조절 (마우스에서만) */
+.rz {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+@media (hover: none) {
+  .rz {
+    display: none;
+  }
+}
+
+.blk:focus-visible,
+.chip:focus-visible {
+  outline: 3px solid var(--c4);
+  outline-offset: 1px;
+  z-index: 3;
+}
+
+/* 끌기 중 표시 */
+.blk.preview {
+  z-index: 4;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  background: color-mix(in srgb, var(--c4) 22%, transparent);
+  border: 2px dashed var(--c4);
+  pointer-events: none;
+}
+
+.blk.dragging,
+.chip.dragging {
+  opacity: .4;
+}
+
+.is-dragging,
+.is-dragging * {
+  cursor: grabbing !important;
+}
+
+.drag-ghost {
+  position: fixed;
+  z-index: 200;
+  max-width: 280px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 700;
+  pointer-events: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
+}
+
+/* 색 설명 */
+.plan-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+}
+
+.lg-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lg {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--kc);
+}
+
+.lg-warn {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+/* 최근 변경 */
+.history summary {
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.history ol {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+}
+
+.history li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+  font-size: 15px;
+}
+
+@media (max-width: 860px) {
+  .plan {
+    --hh: 60px;
+  }
+
+  .plan-bar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .only-wide {
+    display: none;
+  }
+
+  .only-narrow {
+    display: inline;
+  }
+
+  /* 휴대폰: 고른 날짜 하루만 */
+  .day-pick {
+    display: flex;
+  }
+
+  .tl-head,
+  .tl-body {
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+
+  .tl-day:not(.on),
+  .tl-col:not(.on) {
+    display: none;
+  }
+
+  .blk-time {
+    font-size: 12.5px;
+  }
+
+  .blk-title {
+    font-size: 15px;
+  }
+}
+
+/* ===== 일정 편집 창 ===== */
+.sheet {
+  width: min(560px, calc(100% - 24px));
+  max-height: calc(100% - 24px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--fg);
+}
+
+.sheet::backdrop {
+  background: rgba(0, 0, 0, .45);
+}
+
+.sheet form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+}
+
+.sheet h2 {
+  font-size: 22px;
+}
+
+.f {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.f input,
+.f select,
+.f textarea {
+  font: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 8px 10px;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.f select:disabled {
+  opacity: .5;
+}
+
+.f input:focus-visible,
+.f select:focus-visible,
+.f textarea:focus-visible,
+.connect-form input:focus-visible,
+.me input:focus-visible {
+  outline: 3px solid var(--c4);
+  outline-offset: 1px;
+}
+
+.f-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.dlg-place {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dlg-place:empty {
+  display: none;
+}
+
+.dlg-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+/* 휴대폰에서는 아래에서 올라오는 창 */
+@media (max-width: 600px) {
+  .sheet {
+    width: 100%;
+    max-width: 100%;
+    max-height: 92vh;
+    margin: auto 0 0;
+    border-radius: 14px 14px 0 0;
+  }
+
+  .sheet form {
+    padding-bottom: max(20px, env(safe-area-inset-bottom, 0px));
   }
 }
 

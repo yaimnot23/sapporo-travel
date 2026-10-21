@@ -1,15 +1,21 @@
 /*
- * 맨 위 탭 전환: [호텔 비교] / [여행 경비]
+ * 맨 위 탭 전환: [일정 계획] / [장소 검색] / [여행 경비] / [호텔 비교]
  *
- * 주소 끝에 #cost 를 붙이면 경비 탭이 바로 열립니다. (예: .../index.html#cost)
- * 다른 사람에게 특정 탭을 보여주고 싶을 때 그 주소를 보내면 됩니다.
+ * 주소 끝에 #search, #cost, #hotel 을 붙이면 그 탭이 바로 열립니다. (예: .../index.html#cost)
+ * 아무것도 없거나 가족 공유 링크(#k=...)면 일정 계획 탭이 열립니다.
  */
 (function () {
 
   const TABS = [
-    { tab: document.getElementById('tab-hotel'), panel: document.getElementById('p-hotel'), hash: '' },
-    { tab: document.getElementById('tab-cost'),  panel: document.getElementById('p-cost'),  hash: '#cost' },
-  ];
+    { id: 'plan',   hash: '' },
+    { id: 'search', hash: '#search' },
+    { id: 'cost',   hash: '#cost' },
+    { id: 'hotel',  hash: '#hotel' },
+  ].map((t) => ({
+    tab: document.getElementById('tab-' + t.id),
+    panel: document.getElementById('p-' + t.id),
+    hash: t.hash,
+  }));
 
   function show(index, { focus = false, updateHash = false } = {}) {
     TABS.forEach((t, i) => {

@@ -18,13 +18,40 @@
   <div class="site-top">
     <p class="eyebrow">삿포로 골프 여행 · 2027년 6월 28일 ~ 7월 5일 · 7박 8일</p>
     <div class="tabs" role="tablist" aria-label="보기 선택">
-      <button type="button" class="tab" role="tab" id="tab-hotel" aria-controls="p-hotel" aria-selected="true">호텔 비교</button>
+      <button type="button" class="tab" role="tab" id="tab-plan" aria-controls="p-plan" aria-selected="true">일정 계획</button>
+      <button type="button" class="tab" role="tab" id="tab-search" aria-controls="p-search" aria-selected="false" tabindex="-1">장소 검색</button>
       <button type="button" class="tab" role="tab" id="tab-cost" aria-controls="p-cost" aria-selected="false" tabindex="-1">여행 경비</button>
+      <button type="button" class="tab" role="tab" id="tab-hotel" aria-controls="p-hotel" aria-selected="false" tabindex="-1">호텔 비교</button>
     </div>
   </div>
 
-  <!-- ===================== 탭 1: 호텔 비교 (내용은 script.js가 채움) ===================== -->
-  <div class="tabpanel" role="tabpanel" id="p-hotel" aria-labelledby="tab-hotel">
+  <!-- ===================== 탭: 일정 계획 (plan.js · store.js, 가족 실시간 공유) ===================== -->
+  <div class="tabpanel plan" role="tabpanel" id="p-plan" aria-labelledby="tab-plan">
+    <header>
+      <h1>일정 계획</h1>
+      <p class="lead">B안 · 마이스테이즈 프리미어 삿포로 파크 7박 · 매일 6:00~22:00</p>
+    </header>
+    <div id="planRoot"><p class="small">불러오는 중…</p></div>
+    <noscript><p class="note">일정 계획은 JavaScript가 켜져 있어야 보입니다.</p></noscript>
+  </div>
+
+  <!-- ===================== 탭: 장소 검색 (search.js, 구글 Places API) ===================== -->
+  <div class="tabpanel search" role="tabpanel" id="p-search" aria-labelledby="tab-search" hidden>
+    <header>
+      <h1>삿포로 장소 검색</h1>
+      <p class="lead">관광지 · 맛집을 검색해서 ‘계획에 추가’를 누르면 일정 계획의 대기함에 들어가요.</p>
+    </header>
+    <form class="search-bar" id="searchForm" role="search">
+      <input id="searchInput" type="search" placeholder="예: 오타루 운하, 스스키노 라멘, 징기스칸" autocomplete="off" aria-label="검색어">
+      <button type="submit" class="btn">검색</button>
+    </form>
+    <div class="quick" id="quick" aria-label="빠른 검색"></div>
+    <p class="small" id="searchStatus" aria-live="polite">검색어를 넣거나 위 버튼을 눌러 보세요. 정보는 구글 지도에서 가져옵니다.</p>
+    <ul class="results" id="results"></ul>
+  </div>
+
+  <!-- ===================== 탭: 호텔 비교 (내용은 script.js가 채움) ===================== -->
+  <div class="tabpanel" role="tabpanel" id="p-hotel" aria-labelledby="tab-hotel" hidden>
 
     <header>
       <h1>삿포로 호텔 4곳 비교</h1>
@@ -183,9 +210,39 @@
 
 </div>
 
+<!-- 일정 편집 창 (plan.js) -->
+<dialog id="itemDialog" class="sheet" aria-labelledby="dlgTitle">
+  <form id="itemForm">
+    <h2 id="dlgTitle">일정</h2>
+    <label class="f">제목
+      <input name="itemTitle" type="text" maxlength="60" autocomplete="off">
+    </label>
+    <label class="f">날짜
+      <select name="day"></select>
+    </label>
+    <div class="f-row">
+      <label class="f">시작 <select name="start"></select></label>
+      <label class="f">끝 <select name="end"></select></label>
+    </div>
+    <label class="f">메모
+      <textarea name="memo" rows="3" maxlength="500" placeholder="예약 번호, 같이 갈 사람, 주의할 점 등"></textarea>
+    </label>
+    <p class="note" id="dlgWarn" hidden></p>
+    <div class="dlg-place" id="dlgPlace"></div>
+    <div class="dlg-actions">
+      <button type="submit" class="btn">저장</button>
+      <button type="button" class="btn-ghost" data-dlg="tray">대기함으로</button>
+      <button type="button" class="btn-ghost danger" data-dlg="delete">삭제</button>
+      <button type="button" class="btn-ghost" data-dlg="close">닫기</button>
+    </div>
+  </form>
+</dialog>
+
 <script src="script.js"></script>
 <script src="cost.js"></script>
 <script src="tabs.js"></script>
+<script type="module" src="plan.js"></script>
+<script type="module" src="search.js"></script>
 
 </body>
 </html>
