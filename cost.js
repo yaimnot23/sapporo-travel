@@ -1,5 +1,5 @@
 /*
- * 여행 경비 탭 (A안 직접 예약) + A안 · B안 비교 탭
+ * 예약 경비 탭 (A안 직접 예약) + A안 · B안 비교 탭
  *
  * - 시내 3박 호텔을 고르면 숙박비와 합계가 모두 바뀝니다. (호텔 목록 · 요금은 hotels-data.js)
  * - 환율 · 좌석 · 조식 횟수를 바꾸면 엔화 항목을 원화로 다시 계산합니다.
@@ -66,7 +66,7 @@
     return { bfYen, bfWon, lodge, total, per: Math.round(total / PEOPLE) };
   }
 
-  /* ===== 시내 호텔 고르기 버튼 (여행 경비 · A안·B안 두 탭에 같은 버튼) ===== */
+  /* ===== 시내 호텔 고르기 버튼 (예약 경비 · A안·B안 두 탭에 같은 버튼) ===== */
   function renderPickers() {
     const html = CITY_HOTELS.map((h) => `
       <button type="button" data-city="${h.num}" aria-pressed="${h.num === cityNum}" style="--hc:var(${h.color})">
@@ -114,7 +114,7 @@
     setText('bfYen', format(t.bfYen));
     setText('bfWon', format(t.bfWon));
 
-    // 여행 경비 탭
+    // 예약 경비 탭
     setText('aLodge', format(t.lodge));
     setText('aTrans', format(transWon));
     setText('aRound', format(roundWon));
@@ -132,6 +132,10 @@
     setText('cDiff', format(Math.abs(B_TOTAL_WON - t.total)));
     setText('cPct', Math.round(t.total / B_TOTAL_WON * 100));
     setText('cYenShare', Math.round((transWon + roundWon + t.bfWon) / 10000)); // 만원 단위
+
+    // 지출 관리 탭(spend.js)이 예약 경비 · 환율을 같이 씀
+    window.sapporoCost = { total: t.total, rate, cityShort: hotel.short };
+    window.dispatchEvent(new Event('costchange'));
 
     // 시내 호텔별 A안 총액 표
     document.getElementById('cityTable').innerHTML = CITY_HOTELS.map((h) => {

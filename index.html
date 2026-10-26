@@ -20,7 +20,8 @@
     <div class="tabs" role="tablist" aria-label="보기 선택">
       <button type="button" class="tab" role="tab" id="tab-plan" aria-controls="p-plan" aria-selected="true">일정 계획</button>
       <button type="button" class="tab" role="tab" id="tab-search" aria-controls="p-search" aria-selected="false" tabindex="-1">장소 검색</button>
-      <button type="button" class="tab" role="tab" id="tab-cost" aria-controls="p-cost" aria-selected="false" tabindex="-1">여행 경비</button>
+      <button type="button" class="tab" role="tab" id="tab-spend" aria-controls="p-spend" aria-selected="false" tabindex="-1">총 경비</button>
+      <button type="button" class="tab" role="tab" id="tab-cost" aria-controls="p-cost" aria-selected="false" tabindex="-1">예약 경비</button>
       <button type="button" class="tab" role="tab" id="tab-ab" aria-controls="p-ab" aria-selected="false" tabindex="-1">A안 · B안</button>
       <button type="button" class="tab" role="tab" id="tab-hotel" aria-controls="p-hotel" aria-selected="false" tabindex="-1">호텔 비교</button>
     </div>
@@ -50,6 +51,33 @@
     <div id="originPick"></div>
     <p class="small" id="searchStatus" aria-live="polite">검색어를 넣거나 위 버튼을 눌러 보세요. 정보는 구글 지도에서 가져옵니다.</p>
     <ul class="results" id="results"></ul>
+  </div>
+
+  <!-- ===================== 탭: 총 경비 (spend.js, 지출은 가족 계획에 같이 저장) ===================== -->
+  <div class="tabpanel cost spend" role="tabpanel" id="p-spend" aria-labelledby="tab-spend" hidden>
+    <header>
+      <h1>총 경비</h1>
+      <p class="lead">예약한 경비 + 식비 · 관광 · 쇼핑처럼 직접 넣는 지출. 가족이 같이 보고 고칠 수 있어요.</p>
+    </header>
+
+    <div class="spend-sum" id="spendSum"></div>
+
+    <section class="sec">
+      <h2>지출 넣기</h2>
+      <p class="note" id="spendConnect" hidden>지출을 넣으려면 먼저 ‘일정 계획’ 탭에서 가족 계획에 연결해 주세요. (일정과 같은 곳에 저장돼요)</p>
+      <form class="spend-form" id="spendForm"></form>
+      <p class="small">엔화로 넣으면 ‘예약 경비’ 탭의 환율로 원화로 바꿔 더해요. 아직 안 쓴 돈은 예상 금액으로 넣어 두고, 여행 중에 실제 금액으로 고치면 돼요.</p>
+    </section>
+
+    <section class="sec">
+      <h2>분류별 추가 지출</h2>
+      <div class="spend-cats" id="spendCats"></div>
+    </section>
+
+    <section class="sec">
+      <h2>날짜별 지출</h2>
+      <div id="spendList"></div>
+    </section>
   </div>
 
   <!-- ===================== 탭: 호텔 비교 (내용은 script.js가 채움) ===================== -->
@@ -98,11 +126,11 @@
 
   </div>
 
-  <!-- ===================== 탭: 여행 경비 (A안 직접 예약, 계산은 cost.js) ===================== -->
+  <!-- ===================== 탭: 예약 경비 (A안 직접 예약, 계산은 cost.js) ===================== -->
   <div class="tabpanel cost" role="tabpanel" id="p-cost" aria-labelledby="tab-cost" hidden>
 
     <header>
-      <h1>여행 경비 (A안 · 직접 예약)</h1>
+      <h1>예약 경비 (A안 · 직접 예약)</h1>
       <p class="lead">4명 합계 · 항공권 제외 · 키타히로시마 4박 + 삿포로 시내 3박</p>
     </header>
 
@@ -200,7 +228,7 @@
     <section class="sec city-sec">
       <h2>A안 시내 3박 호텔</h2>
       <div class="city-pick" data-city-pick role="group" aria-label="A안 시내 3박 호텔"></div>
-      <p class="small">‘여행 경비’ 탭과 같은 선택이에요. 환율 · 좌석 · 조식 설정도 그 탭을 따릅니다.</p>
+      <p class="small">‘예약 경비’ 탭과 같은 선택이에요. 환율 · 좌석 · 조식 설정도 그 탭을 따릅니다.</p>
     </section>
 
     <section class="sec">
@@ -225,7 +253,7 @@
 
     <section class="sec">
       <h2>시내 호텔별 A안 총액</h2>
-      <p class="small">호텔 이름을 누르면 위 비교와 ‘여행 경비’ 탭이 그 호텔로 바뀌어요.</p>
+      <p class="small">호텔 이름을 누르면 위 비교와 ‘예약 경비’ 탭이 그 호텔로 바뀌어요.</p>
       <div class="scroll">
         <table>
           <thead>
@@ -262,7 +290,7 @@
       <ul class="checklist">
         <li>두 안 모두 <b>항공권은 제외</b>했고, 점심과 저녁 식사비도 들어 있지 않아요.</li>
         <li>B안 견적서의 불포함 항목에 적힌 유류할증료와 텍스는 항공권에 붙는 비용이라 위 금액에 넣지 않았어요.</li>
-        <li>A안 시내 호텔 조식은 ‘여행 경비’ 탭에서 고른 횟수만큼 더해져요. B안은 조식이 포함돼 있어요.</li>
+        <li>A안 시내 호텔 조식은 ‘예약 경비’ 탭에서 고른 횟수만큼 더해져요. B안은 조식이 포함돼 있어요.</li>
       </ul>
     </section>
 
@@ -304,6 +332,7 @@
 <script src="tabs.js"></script>
 <script type="module" src="plan.js"></script>
 <script type="module" src="search.js"></script>
+<script type="module" src="spend.js"></script>
 
 </body>
 </html>

@@ -50,6 +50,7 @@ const state = {
   status: 'none',
   items: new Map(),
   history: [],
+  expenses: [],
   pending: false,
   error: null,
 };
@@ -82,6 +83,7 @@ function listen() {
   unsubscribers = [];
   state.items = new Map();
   state.history = [];
+  state.expenses = [];
   state.error = null;
 
   if (!state.key) {
@@ -113,6 +115,12 @@ function listen() {
   const historyQuery = query(collection(tripRef(), 'history'), orderBy('at', 'desc'), limit(30));
   unsubscribers.push(onSnapshot(historyQuery, (snap) => {
     state.history = snap.docs.map((d) => ({ id: d.id, ...d.data({ serverTimestamps: 'estimate' }) }));
+    emit();
+  }, fail));
+
+  // 지출 관리 탭의 지출 목록 (trips/{열쇠}/expenses)
+  unsubscribers.push(onSnapshot(collection(tripRef(), 'expenses'), (snap) => {
+    state.expenses = snap.docs.map((d) => ({ id: d.id, ...d.data({ serverTimestamps: 'estimate' }) }));
     emit();
   }, fail));
 }
@@ -250,6 +258,27 @@ function write(id, after, text) {
 // id가 없으면 새 일정 추가
 export function saveItem(id, item) {
   return write(id, item);
+}
+
+/* ===== 지출 (지출 관리 탭) ===== */
+// 지출 하나: { day: '2027-06-30' | 'before'(여행 전·공통), cat, title, amount, cur: 'JPY' | 'KRW', memo }
+const EXPENSE_FIELDS = ['day', 'cat', 'title', 'amount', 'cur', 'memo'];
+
+// id가 없으면 새 지출 추가
+export function saveExpense(id, data) {
+  const col = collection(tripRef(), 'expenses');
+  const ref = id ? doc(col, id) : doc(col);
+  const out = {};
+  EXPENSE_FIELDS.forEach((f) => { out[f] = data[f] ?? null; });
+  writeBatch(db)
+    .set(ref, { ...out, by: getName(), updatedAt: serverTimestamp() })
+    .commit()
+    .catch(fail);
+  return ref.id;
+}
+
+export function removeExpense(id) {
+  writeBatch(db).delete(doc(collection(tripRef(), 'expenses'), id)).commit().catch(fail);
 }
 
 export function removeItem(id) {

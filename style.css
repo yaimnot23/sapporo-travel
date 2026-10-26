@@ -1741,6 +1741,254 @@ button.btn:disabled {
   }
 }
 
+/* ===== 총 경비 탭 ===== */
+.spend-sum {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .spend-sum {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.sum-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 16px 18px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.sum-card span {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.sum-card b {
+  font-size: 24px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.sum-card small {
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.sum-card.main {
+  border-top: 6px solid var(--accent);
+}
+
+.sum-card.main b {
+  color: var(--accent);
+  font-size: 28px;
+}
+
+/* 지출 넣기 */
+.spend-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 16px 18px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.spend-form .wide,
+.spend-form .amount-f,
+.spend-form .spend-actions {
+  grid-column: 1 / -1;
+}
+
+.amount-row {
+  display: flex;
+  gap: 8px;
+}
+
+.amount-row input,
+.amount-row select {
+  font: inherit;
+  font-size: 16px;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.amount-row input {
+  flex: 1;
+  min-width: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.spend-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.spend-form :disabled {
+  opacity: .5;
+}
+
+/* 분류별 막대 */
+.spend-cats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cat-row {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+}
+
+.cat-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.cat-name i {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--cc);
+}
+
+.cat-bar {
+  height: 12px;
+  border-radius: 6px;
+  background: var(--soft);
+  overflow: hidden;
+}
+
+.cat-bar span {
+  display: block;
+  height: 100%;
+  background: var(--cc);
+  border-radius: 6px;
+}
+
+.cat-row b {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 날짜별 목록 */
+.spend-day {
+  margin-bottom: 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.spend-day h3 {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  font-size: 16px;
+  background: var(--soft);
+}
+
+.spend-day h3 span {
+  font-variant-numeric: tabular-nums;
+}
+
+.spend-day ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.spend-day li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--line);
+  font-size: 15px;
+}
+
+.spend-day li.editing {
+  background: color-mix(in srgb, var(--c4) 10%, var(--card));
+}
+
+.chip-cat {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--fg);
+  background: color-mix(in srgb, var(--cc) 18%, var(--card));
+  border: 1px solid color-mix(in srgb, var(--cc) 50%, var(--card));
+}
+
+.spend-title {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.spend-title small {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.spend-amt {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.spend-amt b {
+  color: var(--fg);
+}
+
+.spend-btns {
+  display: flex;
+  gap: 4px;
+}
+
+@media (max-width: 640px) {
+  .spend-day li {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .spend-btns {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+
+  .cat-row {
+    grid-template-columns: 7.5rem minmax(0, 1fr) auto;
+    font-size: 15px;
+  }
+
+  .cat-name {
+    white-space: nowrap;
+  }
+}
+
 /* ===== 출발 호텔 고르기 (드롭다운) ===== */
 .origin-pick select {
   font: inherit;

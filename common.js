@@ -38,7 +38,7 @@ export const HOTELS = [CLASSE, ...CITY, B_PARK];
 
 const ORIGIN_STORAGE = 'sapporo.originHotel';
 
-// 지금 고른 출발 호텔. 처음엔 '여행 경비' 탭에서 고른 시내 호텔 (없으면 첫 시내 호텔)
+// 지금 고른 출발 호텔. 처음엔 '예약 경비' 탭에서 고른 시내 호텔 (없으면 첫 시내 호텔)
 export function originHotel() {
   const saved = HOTELS.find((h) => h.id === storageGet(ORIGIN_STORAGE));
   if (saved) return saved;
@@ -86,7 +86,7 @@ export const SEED_ITEMS = [
   golf('2027-07-01', TEE_MEMO),
   golf('2027-07-02', '키타히로시마 체크아웃하고 짐을 맡긴 뒤 라운딩 (짐 보관은 호텔에 확인). ' + TEE_MEMO),
   { title: '삿포로 시내 호텔로 이동 · 체크인', kind: 'fixed', day: '2027-07-02', start: 15 * 60 + 30, end: 17 * 60, dur: 90,
-    memo: "키타히로시마 → 시내 호텔 (교통비 2,320엔). 호텔은 '여행 경비' 탭에서 고른 곳.", place: null },
+    memo: "키타히로시마 → 시내 호텔 (교통비 2,320엔). 호텔은 '예약 경비' 탭에서 고른 곳.", place: null },
   { title: '체크아웃 · 공항 이동', kind: 'fixed', day: '2027-07-05', start: 9 * 60, end: 11 * 60, dur: 120,
     memo: '시내 호텔 체크아웃 후 JR로 신치토세공항. 항공편 시간에 맞춰 조정하세요.', place: null },
 ];

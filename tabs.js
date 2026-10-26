@@ -1,7 +1,7 @@
 /*
- * 맨 위 탭 전환: [일정 계획] / [장소 검색] / [여행 경비] / [A안 · B안] / [호텔 비교]
+ * 맨 위 탭 전환: [일정 계획] / [장소 검색] / [총 경비] / [예약 경비] / [A안 · B안] / [호텔 비교]
  *
- * 주소 끝에 #search, #cost, #ab, #hotel 을 붙이면 그 탭이 바로 열립니다. (예: .../index.html#cost)
+ * 주소 끝에 #search, #spend, #cost, #ab, #hotel 을 붙이면 그 탭이 바로 열립니다. (예: .../index.html#cost)
  * 아무것도 없거나 가족 공유 링크(#k=...)면 일정 계획 탭이 열립니다.
  */
 (function () {
@@ -9,6 +9,7 @@
   const TABS = [
     { id: 'plan',   hash: '' },
     { id: 'search', hash: '#search' },
+    { id: 'spend',  hash: '#spend' },
     { id: 'cost',   hash: '#cost' },
     { id: 'ab',     hash: '#ab' },
     { id: 'hotel',  hash: '#hotel' },
