@@ -78,18 +78,49 @@ function golf(day, memo) {
   return { title: '키타히로시마 CC 27홀 라운딩', kind: 'fixed', day, start, end, dur: end - start, memo, place: null };
 }
 
-export const SEED_ITEMS = [
-  { title: '키타히로시마 클래스 호텔 체크인', kind: 'fixed', day: '2027-06-28', start: 15 * 60, end: 15 * 60 + 30, dur: 30,
-    memo: '신치토세공항에서 이동 (첫날 교통비 4,000엔). 항공편 도착 시간에 맞춰 옮기세요.', place: null },
-  golf('2027-06-29', TEE_MEMO),
-  golf('2027-06-30', TEE_MEMO),
-  golf('2027-07-01', TEE_MEMO),
-  golf('2027-07-02', '키타히로시마 체크아웃하고 짐을 맡긴 뒤 라운딩 (짐 보관은 호텔에 확인). ' + TEE_MEMO),
-  { title: '삿포로 시내 호텔로 이동 · 체크인', kind: 'fixed', day: '2027-07-02', start: 15 * 60 + 30, end: 17 * 60, dur: 90,
-    memo: "키타히로시마 → 시내 호텔 (교통비 2,320엔). 호텔은 '예약 경비' 탭에서 고른 곳.", place: null },
-  { title: '체크아웃 · 공항 이동', kind: 'fixed', day: '2027-07-05', start: 9 * 60, end: 11 * 60, dur: 120,
-    memo: '시내 호텔 체크아웃 후 JR로 신치토세공항. 항공편 시간에 맞춰 조정하세요.', place: null },
-];
+// 시내 3박 호텔 (hotels-data.js의 번호로 찾음, 없으면 null = 아직 안 정함)
+export function cityHotelByNum(num) {
+  return (window.SAPPORO_CITY_HOTELS || []).find((h) => h.num === num) || null;
+}
+
+// 호텔을 일정의 장소 정보로 (편집 창에서 구글지도 · 길찾기 버튼이 나오게)
+function hotelPlace(h) {
+  return {
+    id: null, name: h.name, query: h.query, address: h.area, lat: h.lat, lng: h.lng,
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(h.query),
+    website: '', rating: null, ratingCount: null, priceLevel: null, typeLabel: '숙소', hours: null, hoursText: null,
+  };
+}
+
+// 시내 호텔이 들어가는 고정 일정 2개의 제목 · 메모 · 장소.
+// role('city-in' / 'city-out')로 찾아서, 우리 시내 호텔을 바꾸면 같이 바뀝니다.
+export function cityHotelItemPatch(role, h) {
+  if (role === 'city-in') {
+    return h
+      ? { title: `${h.short} 체크인 (시내로 이동)`, memo: `키타히로시마 → ${h.name} (교통비 2,320엔).`, place: hotelPlace(h) }
+      : { title: '삿포로 시내 호텔로 이동 · 체크인', memo: "키타히로시마 → 시내 호텔 (교통비 2,320엔). 호텔이 정해지면 위쪽 '우리 시내 호텔'에서 고르세요.", place: null };
+  }
+  return h
+    ? { title: `${h.short} 체크아웃 · 공항 이동`, memo: `${h.name} 체크아웃 후 JR로 신치토세공항. 항공편 시간에 맞춰 조정하세요.`, place: hotelPlace(h) }
+    : { title: '체크아웃 · 공항 이동', memo: '시내 호텔 체크아웃 후 JR로 신치토세공항. 항공편 시간에 맞춰 조정하세요.', place: null };
+}
+
+// A안 고정 일정. cityNum: 우리 시내 호텔 번호 (없으면 이름 없이)
+export function seedItems(cityNum) {
+  const h = cityHotelByNum(cityNum);
+  return [
+    { title: '키타히로시마 클래스 호텔 체크인', kind: 'fixed', day: '2027-06-28', start: 15 * 60, end: 15 * 60 + 30, dur: 30,
+      memo: '신치토세공항에서 이동 (첫날 교통비 4,000엔). 항공편 도착 시간에 맞춰 옮기세요.', place: null },
+    golf('2027-06-29', TEE_MEMO),
+    golf('2027-06-30', TEE_MEMO),
+    golf('2027-07-01', TEE_MEMO),
+    golf('2027-07-02', '키타히로시마 체크아웃하고 짐을 맡긴 뒤 라운딩 (짐 보관은 호텔에 확인). ' + TEE_MEMO),
+    { kind: 'fixed', role: 'city-in', day: '2027-07-02', start: 15 * 60 + 30, end: 17 * 60, dur: 90,
+      ...cityHotelItemPatch('city-in', h) },
+    { kind: 'fixed', role: 'city-out', day: '2027-07-05', start: 9 * 60, end: 11 * 60, dur: 120,
+      ...cityHotelItemPatch('city-out', h) },
+  ];
+}
 
 /* ===== 도우미 함수 ===== */
 

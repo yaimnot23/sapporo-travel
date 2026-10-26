@@ -71,7 +71,7 @@
     const html = CITY_HOTELS.map((h) => `
       <button type="button" data-city="${h.num}" aria-pressed="${h.num === cityNum}" style="--hc:var(${h.color})">
         <span class="num">${h.num}</span>
-        <span class="city-txt"><b>${esc(h.short)}</b><small>${man(h.price)}</small></span>
+        <span class="city-txt"><b>${esc(h.short)}</b><small>${man(h.price)}${h.num === window.sapporoTripHotel ? ' · <em>우리 계획</em>' : ''}</small></span>
       </button>`).join('');
     document.querySelectorAll('[data-city-pick]').forEach((el) => { el.innerHTML = html; });
   }
@@ -134,7 +134,9 @@
     setText('cYenShare', Math.round((transWon + roundWon + t.bfWon) / 10000)); // 만원 단위
 
     // 지출 관리 탭(spend.js)이 예약 경비 · 환율을 같이 씀
-    window.sapporoCost = { total: t.total, rate, cityShort: hotel.short };
+    const totals = {};
+    CITY_HOTELS.forEach((h) => { totals[h.num] = totalsFor(h, rate, transWon, roundWon, bfCount).total; });
+    window.sapporoCost = { total: t.total, totals, rate, cityShort: hotel.short };
     window.dispatchEvent(new Event('costchange'));
 
     // 시내 호텔별 A안 총액 표
@@ -167,6 +169,12 @@
   rateInput.addEventListener('input', update);
   seatSelect.addEventListener('change', update);
   bfSelect.addEventListener('change', update);
+
+  // 가족 계획에 '우리 시내 호텔'이 정해져 있으면(일정 계획 탭) 그 호텔로 맞춤
+  window.addEventListener('triphotel', () => {
+    if (window.sapporoTripHotel) pickCity(window.sapporoTripHotel);
+    else renderPickers();
+  });
 
   renderPickers();
   update();

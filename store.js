@@ -15,14 +15,15 @@ import {
   doc, collection, onSnapshot, writeBatch, serverTimestamp, query, orderBy, limit,
 } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js';
 import { firebaseConfig } from './firebase-config.js';
-import { SEED_ITEMS, dayLabel, fmtTime, storageGet, storageSet } from './common.js';
+import { seedItems, cityHotelByNum, cityHotelItemPatch, dayLabel, fmtTime, storageGet, storageSet } from './common.js';
 
 const KEY_STORAGE = 'sapporo.tripKey';
 const NAME_STORAGE = 'sapporo.name';
 const KEY_PATTERN = /^[A-Za-z0-9_-]{24,64}$/;
 
 // 일정 하나가 가지는 값 (이 밖의 값은 저장하지 않음)
-const ITEM_FIELDS = ['title', 'kind', 'day', 'start', 'end', 'dur', 'memo', 'place'];
+// role: 시내 호텔 체크인/체크아웃 일정 표시 ('city-in' · 'city-out'), 우리 시내 호텔을 바꿀 때 찾아서 고침
+const ITEM_FIELDS = ['title', 'kind', 'day', 'start', 'end', 'dur', 'memo', 'place', 'role'];
 
 /* ===== Firebase 연결 ===== */
 const app = initializeApp(firebaseConfig);
@@ -51,6 +52,7 @@ const state = {
   items: new Map(),
   history: [],
   expenses: [],
+  trip: null,
   pending: false,
   error: null,
 };
@@ -84,6 +86,7 @@ function listen() {
   state.items = new Map();
   state.history = [];
   state.expenses = [];
+  state.trip = null;
   state.error = null;
 
   if (!state.key) {
@@ -96,10 +99,9 @@ function listen() {
 
   unsubscribers.push(onSnapshot(tripRef(), (snap) => {
     if (snap.exists()) {
-      if (state.status !== 'ready') {
-        state.status = 'ready';
-        emit();
-      }
+      state.trip = snap.data(); // 계획 정보 (cityHotel: 우리 시내 호텔 번호)
+      state.status = 'ready';
+      emit();
     } else if (!snap.metadata.fromCache) {
       state.status = 'missing';
       emit();
@@ -158,12 +160,13 @@ function randomKey() {
 }
 
 // A안 고정 일정을 넣은 새 계획을 만들고 연결 (인터넷 연결 필요)
-export async function createTrip() {
+// cityNum: 우리 시내 호텔 번호 (hotels-data.js), 아직 안 정했으면 null
+export async function createTrip(cityNum = null) {
   const key = randomKey();
   const trip = doc(db, 'trips', key);
   const batch = writeBatch(db);
-  batch.set(trip, { title: '삿포로 골프 여행 (A안)', createdAt: serverTimestamp() });
-  SEED_ITEMS.forEach((item) => {
+  batch.set(trip, { title: '삿포로 골프 여행 (A안)', cityHotel: cityNum, createdAt: serverTimestamp() });
+  seedItems(cityNum).forEach((item) => {
     batch.set(doc(collection(trip, 'items')), { ...pick(item), by: getName(), updatedAt: serverTimestamp() });
   });
   batch.set(doc(collection(trip, 'history')), {
@@ -187,11 +190,33 @@ export function replaceFixedItems() {
     batch.delete(doc(itemsCol, i.id));
     log(i.id, pick(i), null, `‘${i.title}’ 삭제 (A안으로 바꾸기)`);
   });
-  SEED_ITEMS.forEach((item) => {
+  seedItems(state.trip?.cityHotel ?? null).forEach((item) => {
     const ref = doc(itemsCol);
     const next = pick(item);
     batch.set(ref, { ...next, by: getName(), updatedAt: serverTimestamp() });
     log(ref.id, null, next, `‘${item.title}’ 추가 (A안으로 바꾸기)`);
+  });
+  batch.commit().catch(fail);
+}
+
+// 우리 시내 호텔 바꾸기: 계획에 저장하고, 시내 호텔 체크인 · 체크아웃 일정의 제목 · 장소도 같이 바꿈
+export function setTripHotel(cityNum) {
+  const h = cityHotelByNum(cityNum);
+  const itemsCol = collection(tripRef(), 'items');
+  const historyCol = collection(tripRef(), 'history');
+  const batch = writeBatch(db);
+  batch.set(tripRef(), { cityHotel: h ? h.num : null }, { merge: true });
+  [...state.items.values()].filter((i) => i.role === 'city-in' || i.role === 'city-out').forEach((i) => {
+    const before = pick(i);
+    const after = { ...before, ...cityHotelItemPatch(i.role, h) };
+    batch.set(doc(itemsCol, i.id), { ...after, by: getName(), updatedAt: serverTimestamp() });
+    batch.set(doc(historyCol), {
+      at: serverTimestamp(), by: getName(), text: `‘${after.title}’ (시내 호텔 변경)`, itemId: i.id, before, after,
+    });
+  });
+  batch.set(doc(historyCol), {
+    at: serverTimestamp(), by: getName(), text: `우리 시내 호텔: ${h ? h.name : '아직 안 정함'}`,
+    itemId: null, before: null, after: null,
   });
   batch.commit().catch(fail);
 }

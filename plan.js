@@ -9,7 +9,7 @@
 import {
   DAYS, DAY_START, DAY_END, SNAP,
   esc, fmtTime, fmtDur, dayInfo, dayLabel, snap, clamp, hoursCheck, directionsUrl, toast,
-  originHotel, setOriginHotel, originPickerHTML,
+  originHotel, setOriginHotel, originPickerHTML, cityHotelByNum,
   storageGet, storageSet,
 } from './common.js';
 import * as store from './store.js';
@@ -26,6 +26,8 @@ let drag = null;              // 끌기 중인 정보
 let renderLater = false;      // 끌기 중에 들어온 변경은 끝나고 그림
 let suppressClick = false;
 let editing = null;           // 편집 창에서 고치는 일정 { id, item }
+let choosingHotel = false;    // '새 계획 만들기'를 눌러 호텔 고르는 화면을 보는 중
+let lastTripHotel;            // 다른 탭에 알린 마지막 우리 시내 호텔 번호
 
 function initialDay() {
   const now = new Date();
@@ -117,6 +119,7 @@ function render() {
     root.querySelector('#shareLink').value = store.shareLink();
     root.querySelector('#myName').value = store.getName() === '가족' ? '' : store.getName();
   }
+  renderTripHotel();
   renderTray();
   renderDayPick();
   renderTimeline();
@@ -124,7 +127,43 @@ function render() {
   renderSync();
 }
 
+// 우리 시내 호텔: 고르는 칸을 맞추고, 바뀌었으면 'triphotel' 이벤트로 다른 탭에 알림
+function renderTripHotel() {
+  const num = S.trip?.cityHotel ?? null;
+  const sel = root.querySelector('#tripHotel');
+  if (sel && document.activeElement !== sel) sel.value = num ? String(num) : '';
+  if (num !== lastTripHotel) {
+    lastTripHotel = num;
+    window.sapporoTripHotel = num;
+    window.dispatchEvent(new Event('triphotel'));
+  }
+}
+
+// 새 계획 만들기 전: 시내 3박 호텔 고르기
+function hotelChooserHTML() {
+  const hotels = window.SAPPORO_CITY_HOTELS || [];
+  return `
+    <div class="plan-connect hotel-choose">
+      <h2>시내 3박 호텔을 먼저 골라 주세요</h2>
+      <p>고른 호텔은 가족 계획에 저장돼서, 7/2 체크인 · 7/5 체크아웃 일정과 예약 경비 · 총 경비 계산에 같이 쓰여요. 나중에 바꿀 수도 있어요.</p>
+      <div class="choose-grid">
+        ${hotels.map((h) => `
+          <button type="button" class="choose-card" data-create-hotel="${h.num}" style="--hc:var(${h.color})">
+            <span class="choose-top"><span class="num">${h.num}</span><b>${esc(h.short)}</b><em>${Math.round(h.price / 10000)}만원</em></span>
+            <span class="small">${esc(h.area)}</span>
+            <span class="small">${esc(h.bath)} · 조식 1인 ${h.breakfastYen.toLocaleString('ko-KR')}엔</span>
+          </button>`).join('')}
+      </div>
+      <p class="choose-foot">
+        <button type="button" class="btn-ghost" data-create-hotel="0">아직 못 정했어요 (나중에 정하기)</button>
+        <button type="button" class="link-btn" data-act="cancel-create">취소</button>
+      </p>
+      <p class="small">가족에게 받은 링크가 있다면 만들지 말고 그 링크로 들어와 주세요. 새로 만들면 따로 노는 계획이 생겨요. 자세한 비교는 ‘호텔 비교’ 탭에 있어요.</p>
+    </div>`;
+}
+
 function statusHTML() {
+  if (S.status === 'none' && choosingHotel) return hotelChooserHTML();
   if (S.status === 'loading') return '<p class="small">계획을 불러오는 중…</p>';
   if (S.status === 'missing') {
     return `
@@ -167,6 +206,14 @@ function shellHTML() {
           <button type="button" class="btn-ghost" data-act="copy">복사</button>
         </div>
         <p class="small">이 링크를 받은 사람은 누구나 계획을 보고 고칠 수 있어요. 가족에게만 보내 주세요.</p>
+      </div>
+      <div class="me">
+        <label for="tripHotel">우리 시내 호텔 (7/2 ~ 7/5)</label>
+        <select id="tripHotel">
+          <option value="">아직 안 정함</option>
+          ${(window.SAPPORO_CITY_HOTELS || []).map((h) => `<option value="${h.num}">${esc(h.short)} · ${Math.round(h.price / 10000)}만원</option>`).join('')}
+        </select>
+        <p class="small">가족 모두에게 같이 바뀌어요.</p>
       </div>
       <div class="me">
         <label for="myName">내 이름</label>
@@ -304,7 +351,13 @@ root.addEventListener('click', async (e) => {
   const act = e.target.closest('[data-act]');
   if (act) {
     const a = act.getAttribute('data-act');
-    if (a === 'create') createTrip(act);
+    if (a === 'create') {
+      choosingHotel = true;
+      render();
+    } else if (a === 'cancel-create') {
+      choosingHotel = false;
+      render();
+    }
     else if (a === 'disconnect') {
       if (confirm('이 기기에서 계획 연결을 해제할까요? 계획 자체는 지워지지 않고, 공유 링크로 다시 들어오면 됩니다.')) store.disconnect();
     } else if (a === 'reseed') {
@@ -321,6 +374,12 @@ root.addEventListener('click', async (e) => {
         toast('되돌렸어요.');
       }
     }
+    return;
+  }
+
+  const hotelBtn = e.target.closest('[data-create-hotel]');
+  if (hotelBtn) {
+    createTrip(Number(hotelBtn.getAttribute('data-create-hotel')) || null);
     return;
   }
 
@@ -349,20 +408,24 @@ root.addEventListener('change', (e) => {
     store.setName(e.target.value.trim());
     toast('이름을 저장했어요.');
   }
+  if (e.target.id === 'tripHotel') {
+    const h = cityHotelByNum(Number(e.target.value));
+    store.setTripHotel(h ? h.num : null);
+    toast(h ? `우리 시내 호텔을 ${h.short}(으)로 정했어요.` : '시내 호텔을 아직 안 정함으로 바꿨어요.');
+  }
 });
 
-async function createTrip(button) {
-  if (!confirm('새 계획을 만들까요?\n\n가족에게 받은 링크가 있다면 만들지 말고 그 링크로 들어와 주세요. 새로 만들면 따로 노는 계획이 생겨요.')) return;
-  button.disabled = true;
-  button.textContent = '만드는 중…';
+async function createTrip(cityNum) {
+  root.querySelectorAll('[data-create-hotel]').forEach((b) => { b.disabled = true; });
+  toast('계획을 만드는 중…');
   try {
-    await store.createTrip();
+    await store.createTrip(cityNum);
+    choosingHotel = false;
     toast('새 계획을 만들었어요. 위의 공유 링크를 가족에게 보내 주세요.');
   } catch (err) {
     console.error(err);
     toast('계획을 만들지 못했어요. 인터넷 연결을 확인해 주세요.');
-    button.disabled = false;
-    button.textContent = '새 계획 만들기';
+    root.querySelectorAll('[data-create-hotel]').forEach((b) => { b.disabled = false; });
   }
 }
 
@@ -571,14 +634,14 @@ function placeInfoHTML(item, day, start) {
 
   // 길찾기: 고른 호텔에서 / 바로 앞 일정 장소에서
   const links = [];
-  const here = { name: p.name, placeId: p.id };
+  const here = { name: p.name, query: p.query, placeId: p.id };
   const origin = originHotel();
   if (p.mapsUrl) links.push(`<a class="btn-ghost" href="${esc(p.mapsUrl)}" target="_blank" rel="noopener">구글지도</a>`);
   links.push(`<a class="btn-ghost" href="${esc(directionsUrl(origin, here))}" target="_blank" rel="noopener">${esc(origin.short)}에서 가는 길</a>`);
   if (day) {
     const prev = itemsOn(day).filter((o) => o.id !== editing.id && o.place && o.end <= start).pop();
     if (prev) {
-      const url = directionsUrl({ name: prev.place.name, placeId: prev.place.id }, here);
+      const url = directionsUrl({ name: prev.place.name, query: prev.place.query, placeId: prev.place.id }, here);
       links.push(`<a class="btn-ghost" href="${esc(url)}" target="_blank" rel="noopener">앞 일정(${esc(prev.title)})에서 가는 길</a>`);
     }
   }

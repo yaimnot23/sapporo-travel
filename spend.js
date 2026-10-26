@@ -97,11 +97,18 @@ function render() {
 
   const list = expenses();
   const extra = list.reduce((sum, e) => sum + toWon(e), 0);
-  const booked = window.sapporoCost ? window.sapporoCost.total : 0;
+  // 예약 경비: 가족 계획의 '우리 시내 호텔' 기준 (안 정했으면 예약 경비 탭에서 고른 호텔)
+  const cost = window.sapporoCost;
+  const tripNum = window.sapporoTripHotel;
+  const tripHotel = (window.SAPPORO_CITY_HOTELS || []).find((h) => h.num === tripNum);
+  const booked = !cost ? 0 : tripHotel ? cost.totals[tripHotel.num] : cost.total;
+  const bookedNote = tripHotel
+    ? `A안 · 우리 시내 호텔 ${tripHotel.short}`
+    : `A안 · 시내 ${cost ? cost.cityShort : ''} (예약 경비 탭에서 고른 호텔)`;
   const total = booked + extra;
 
   sumEl.innerHTML = `
-    <div class="sum-card"><span>예약 경비</span><b>${fmt(booked)}원</b><small>A안 · 시내 ${esc(window.sapporoCost ? window.sapporoCost.cityShort : '')} (예약 경비 탭)</small></div>
+    <div class="sum-card"><span>예약 경비</span><b>${fmt(booked)}원</b><small>${esc(bookedNote)}</small></div>
     <div class="sum-card"><span>추가 지출</span><b>${fmt(extra)}원</b><small>${list.length}건 · 식비 · 관광 · 쇼핑 등</small></div>
     <div class="sum-card main"><span>총 경비 (4명)</span><b>${fmt(total)}원</b><small>1인당 약 ${fmt(total / PEOPLE)}원</small></div>`;
 
@@ -196,6 +203,7 @@ listEl.addEventListener('click', (ev) => {
 });
 
 window.addEventListener('costchange', render);
+window.addEventListener('triphotel', render);
 store.subscribe((s) => {
   S = s;
   render();
