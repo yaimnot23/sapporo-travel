@@ -267,9 +267,8 @@ const originEl = document.getElementById('originPick');
 function renderOrigin() {
   originEl.innerHTML = originPickerHTML();
 }
-originEl.addEventListener('click', (e) => {
-  const b = e.target.closest('[data-origin]');
-  if (b) setOriginHotel(b.getAttribute('data-origin'));
+originEl.addEventListener('change', (e) => {
+  if (e.target.matches('[data-origin-select]')) setOriginHotel(e.target.value);
 });
 window.addEventListener('originchange', () => {
   renderOrigin();

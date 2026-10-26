@@ -21,6 +21,7 @@
       <button type="button" class="tab" role="tab" id="tab-plan" aria-controls="p-plan" aria-selected="true">일정 계획</button>
       <button type="button" class="tab" role="tab" id="tab-search" aria-controls="p-search" aria-selected="false" tabindex="-1">장소 검색</button>
       <button type="button" class="tab" role="tab" id="tab-cost" aria-controls="p-cost" aria-selected="false" tabindex="-1">여행 경비</button>
+      <button type="button" class="tab" role="tab" id="tab-ab" aria-controls="p-ab" aria-selected="false" tabindex="-1">A안 · B안</button>
       <button type="button" class="tab" role="tab" id="tab-hotel" aria-controls="p-hotel" aria-selected="false" tabindex="-1">호텔 비교</button>
     </div>
   </div>
@@ -29,7 +30,7 @@
   <div class="tabpanel plan" role="tabpanel" id="p-plan" aria-labelledby="tab-plan">
     <header>
       <h1>일정 계획</h1>
-      <p class="lead">B안 · 마이스테이즈 프리미어 삿포로 파크 7박 · 매일 6:00~22:00</p>
+      <p class="lead">A안 · 키타히로시마 4박 + 삿포로 시내 3박 · 매일 6:00~22:00</p>
     </header>
     <div id="planRoot"><p class="small">불러오는 중…</p></div>
     <noscript><p class="note">일정 계획은 JavaScript가 켜져 있어야 보입니다.</p></noscript>
@@ -97,13 +98,20 @@
 
   </div>
 
-  <!-- ===================== 탭 2: 여행 경비 (계산은 cost.js) ===================== -->
+  <!-- ===================== 탭: 여행 경비 (A안 직접 예약, 계산은 cost.js) ===================== -->
   <div class="tabpanel cost" role="tabpanel" id="p-cost" aria-labelledby="tab-cost" hidden>
 
     <header>
-      <h1>삿포로 골프 여행 경비</h1>
-      <p class="lead">4명 합계 · 항공권 제외</p>
+      <h1>여행 경비 (A안 · 직접 예약)</h1>
+      <p class="lead">4명 합계 · 항공권 제외 · 키타히로시마 4박 + 삿포로 시내 3박</p>
     </header>
+
+    <!-- 시내 3박 호텔 고르기 (cost.js가 채움, A안·B안 탭과 같은 선택) -->
+    <section class="sec city-sec">
+      <h2>시내 3박 호텔 고르기</h2>
+      <div class="city-pick" data-city-pick role="group" aria-label="시내 3박 호텔"></div>
+      <p class="small">요금은 ‘호텔 비교’ 탭과 같은 기준이에요. 각자 침대를 쓰는 가장 싼 방, 객실 2개 3박, 조식 미포함 (2026.10.26 trip.com).</p>
+    </section>
 
     <div class="cost-controls">
       <label>
@@ -118,58 +126,112 @@
           <option value="ja">자유석 (5,000엔)</option>
         </select>
       </label>
+      <label>
+        <span>시내 호텔 조식:</span>
+        <select id="bfCount">
+          <option value="0">안 먹음</option>
+          <option value="1">1번</option>
+          <option value="2">2번</option>
+          <option value="3">3번 (매일)</option>
+        </select>
+        <span class="small">4명 기준, 호텔에서 그날 사 먹는 값</span>
+      </label>
       <p class="small">기본 환율은 2026.10.21 기준(100엔 = 839원)이에요. 바꾸면 아래 금액이 같이 바뀝니다. 실제 환전이나 카드 결제 때는 수수료 때문에 조금 달라질 수 있어요.</p>
     </div>
 
     <div class="cost-total">
-      <div class="label">직접 예약안 (A안) 총 경비</div>
-      <div class="amount"><span id="aTotal">4,859,374</span>원</div>
-      <div class="per">1인당 약 <span id="aPer">1,214,844</span>원</div>
+      <div class="label">A안 총 경비 · 시내 호텔 <b data-city-name>-</b></div>
+      <div class="amount"><span id="aTotal">-</span>원</div>
+      <div class="per">1인당 약 <span id="aPer">-</span>원</div>
     </div>
 
     <section class="sec">
-      <h2>A안 · 직접 예약 항목별 경비</h2>
+      <h2>항목별 경비</h2>
       <div class="scroll">
         <table>
           <thead>
             <tr><th>항목</th><th class="r">엔화</th><th class="r">원화</th></tr>
           </thead>
           <tbody>
-            <tr class="sub"><td colspan="2">숙박</td><td class="r"><span id="aLodge">3,126,000</span>원</td></tr>
-            <tr><td>키타히로시마 클래스 호텔 4박</td><td class="r">-</td><td class="r">1,506,000원</td></tr>
-            <tr><td>미쓰이 가든 호텔 3박<small>조식 포함</small></td><td class="r">-</td><td class="r">1,620,000원</td></tr>
+            <tr class="sub"><td colspan="2">숙박</td><td class="r"><span id="aLodge">-</span>원</td></tr>
+            <tr><td>키타히로시마 클래스 호텔 4박<small>6/28 ~ 7/2</small></td><td class="r">-</td><td class="r">1,506,000원</td></tr>
+            <tr><td><span data-city-name>-</span> 3박<small>7/2 ~ 7/5 · <span id="cityRoom">-</span></small></td><td class="r">-</td><td class="r"><span id="cityWon">-</span>원</td></tr>
+            <tr id="bfRow" hidden><td>시내 호텔 조식<small id="bfNote">-</small></td><td class="r"><span id="bfYen">-</span>엔</td><td class="r"><span id="bfWon">-</span>원</td></tr>
 
-            <tr class="sub"><td colspan="2">교통 · 수하물</td><td class="r"><span id="aTrans">256,734</span>원</td></tr>
-            <tr><td>첫날 교통비</td><td class="r">4,000엔</td><td class="r"><span class="w" data-yen="4000">33,560</span>원</td></tr>
-            <tr><td>키타히로시마 → 미쓰이 가든 호텔 이동</td><td class="r">2,320엔</td><td class="r"><span class="w" data-yen="2320">19,465</span>원</td></tr>
-            <tr><td>수하물 운송<small>골프채 4개 + 짐 1개</small></td><td class="r">16,000엔</td><td class="r"><span class="w" data-yen="16000">134,240</span>원</td></tr>
-            <tr><td>돌아오는 날 교통비<small id="seatNote">지정석 기준</small></td><td class="r"><span id="seatYen">8,280</span>엔</td><td class="r"><span class="w" id="seatWon" data-yen="8280">69,469</span>원</td></tr>
+            <tr class="sub"><td colspan="2">교통 · 수하물</td><td class="r"><span id="aTrans">-</span>원</td></tr>
+            <tr><td>첫날 교통비<small>공항 → 키타히로시마</small></td><td class="r">4,000엔</td><td class="r"><span class="w" data-yen="4000">-</span>원</td></tr>
+            <tr><td>키타히로시마 → 시내 호텔 이동</td><td class="r">2,320엔</td><td class="r"><span class="w" data-yen="2320">-</span>원</td></tr>
+            <tr><td>수하물 운송<small>골프채 4개 + 짐 1개</small></td><td class="r">16,000엔</td><td class="r"><span class="w" data-yen="16000">-</span>원</td></tr>
+            <tr><td>돌아오는 날 교통비<small id="seatNote">지정석 기준</small></td><td class="r"><span id="seatYen">8,280</span>엔</td><td class="r"><span class="w" id="seatWon" data-yen="8280">-</span>원</td></tr>
 
-            <tr class="sub"><td colspan="2">라운딩비</td><td class="r"><span id="aRound">1,476,640</span>원</td></tr>
-            <tr><td>키타히로시마 CC 27홀 4회<small>1인 11,000엔 × 4회 × 4명 = 176,000엔 (가정)</small></td><td class="r">176,000엔</td><td class="r"><span class="w" data-yen="176000">1,476,640</span>원</td></tr>
+            <tr class="sub"><td colspan="2">라운딩비</td><td class="r"><span id="aRound">-</span>원</td></tr>
+            <tr><td>키타히로시마 CC 27홀 4회<small>6/29 ~ 7/2 · 1인 11,000엔 × 4회 × 4명 = 176,000엔 (가정)</small></td><td class="r">176,000엔</td><td class="r"><span class="w" data-yen="176000">-</span>원</td></tr>
 
-            <tr class="sum"><td colspan="2">합계 (4명)</td><td class="r"><span id="aTotal2">4,859,374</span>원</td></tr>
+            <tr class="sum"><td colspan="2">합계 (4명)</td><td class="r"><span id="aTotal2">-</span>원</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
     <section class="sec">
-      <h2>A안 · B안 비교</h2>
+      <h2>확인해 둘 점</h2>
+      <ul class="checklist">
+        <li><b>항공권은 제외</b>했고, 점심과 저녁 식사비도 들어 있지 않아요.</li>
+        <li>라운딩비 11,000엔은 가정한 금액이에요. 예약할 때 실제 요금과 카트, 캐디 포함 여부를 확인해야 해요.</li>
+        <li>시내 호텔 요금은 날짜가 가까워지면 바뀌어요. 예약 직전에 trip.com에서 다시 확인해 주세요.</li>
+        <li>골프채 운송 16,000엔은 오갈 때를 합친 금액인지 예약 전에 한 번 더 확인하면 좋아요.</li>
+      </ul>
+    </section>
+
+    <footer>
+      환율 기준: 100엔당 839원 (2026.10.21 기준). 금액은 원 단위 미만 반올림이에요.
+    </footer>
+
+  </div>
+
+  <!-- ===================== 탭: A안 · B안 비교 (계산은 cost.js) ===================== -->
+  <div class="tabpanel cost" role="tabpanel" id="p-ab" aria-labelledby="tab-ab" hidden>
+
+    <header>
+      <h1>A안 · B안 비교</h1>
+      <p class="lead">A안: 직접 예약 (키타히로시마 4박 + 시내 3박) · B안: 골프투어로 여행사 상품</p>
+    </header>
+
+    <section class="sec city-sec">
+      <h2>A안 시내 3박 호텔</h2>
+      <div class="city-pick" data-city-pick role="group" aria-label="A안 시내 3박 호텔"></div>
+      <p class="small">‘여행 경비’ 탭과 같은 선택이에요. 환율 · 좌석 · 조식 설정도 그 탭을 따릅니다.</p>
+    </section>
+
+    <section class="sec">
+      <h2>총액 비교</h2>
       <p class="small">B안은 골프투어로에서 받은 견적서(마이스테이즈 프리미어 파크 7박 8일)예요. 1인 2,150,000원 × 4명으로 계산했습니다.</p>
       <div class="scroll">
         <table>
           <thead>
-            <tr><th></th><th class="r">A안 직접 예약</th><th class="r">B안 골프투어로</th></tr>
+            <tr><th></th><th class="r">A안 직접 예약<small data-city-name>-</small></th><th class="r">B안 골프투어로</th></tr>
           </thead>
           <tbody>
-            <tr><td>총액 (4명)</td><td class="r"><b><span id="cA">4,859,374</span>원</b></td><td class="r"><b>8,600,000원</b></td></tr>
-            <tr><td>1인당</td><td class="r"><span id="cAper">1,214,844</span>원</td><td class="r">2,150,000원</td></tr>
-            <tr><td>숙박</td><td class="r"><span id="cLodge">3,126,000</span>원</td><td class="r long" rowspan="3">상품가에 모두 포함<br>(별도 구분 없음)</td></tr>
-            <tr><td>교통 · 수하물</td><td class="r"><span id="cTrans">256,734</span>원</td></tr>
-            <tr><td>라운딩비</td><td class="r"><span id="cRound">1,476,640</span>원</td></tr>
-            <tr><td>B안과의 차액</td><td class="r long" colspan="2"><span id="cMore">B안이</span> <span class="hl"><span id="cDiff">3,740,626</span>원</span> 더 비쌈 (A안은 B안의 약 <span id="cPct">57</span>%)</td></tr>
+            <tr><td>총액 (4명)</td><td class="r"><b><span id="cA">-</span>원</b></td><td class="r"><b>8,600,000원</b></td></tr>
+            <tr><td>1인당</td><td class="r"><span id="cAper">-</span>원</td><td class="r">2,150,000원</td></tr>
+            <tr><td>숙박</td><td class="r"><span id="cLodge">-</span>원</td><td class="r long" rowspan="3">상품가에 모두 포함<br>(별도 구분 없음)</td></tr>
+            <tr><td>교통 · 수하물</td><td class="r"><span id="cTrans">-</span>원</td></tr>
+            <tr><td>라운딩비</td><td class="r"><span id="cRound">-</span>원</td></tr>
+            <tr><td>B안과의 차액</td><td class="r long" colspan="2"><span id="cMore">B안이</span> <span class="hl"><span id="cDiff">-</span>원</span> 더 비쌈 (A안은 B안의 약 <span id="cPct">-</span>%)</td></tr>
           </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2>시내 호텔별 A안 총액</h2>
+      <p class="small">호텔 이름을 누르면 위 비교와 ‘여행 경비’ 탭이 그 호텔로 바뀌어요.</p>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr><th>시내 3박 호텔</th><th class="r">A안 총액</th><th class="r">1인당</th><th class="r">B안보다</th></tr>
+          </thead>
+          <tbody id="cityTable"></tbody>
         </table>
       </div>
     </section>
@@ -182,14 +244,14 @@
             <tr><th></th><th>A안</th><th>B안</th></tr>
           </thead>
           <tbody>
-            <tr><td>숙소</td><td>키타히로시마 4박 후 삿포로 시내로 이동해 3박</td><td>삿포로 시내 호텔 한 곳에서 7박 (2인 1실 트윈 2개)</td></tr>
-            <tr><td>골프</td><td>키타히로시마 CC 27홀 × 4회 (108홀)</td><td>5개 골프장 18홀씩 (쎈파크, 기타히로시마, 클라크, 츠키샷프, 유니토부) 90홀</td></tr>
+            <tr><td>숙소</td><td>키타히로시마 클래스 호텔 4박 후 삿포로 시내 호텔로 옮겨 3박 (트윈 2실)</td><td>삿포로 시내 호텔 한 곳에서 7박 (2인 1실 트윈 2개)</td></tr>
+            <tr><td>골프</td><td>키타히로시마 CC 27홀 × 4회 (6/29 ~ 7/2, 108홀)</td><td>5개 골프장 18홀씩 (쎈파크, 기타히로시마, 클라크, 츠키샷프, 유니토부) 90홀</td></tr>
             <tr><td>카트</td><td>라운딩비 11,000엔에 포함인지 확인 필요</td><td>카트비 · 전동카트 포함</td></tr>
-            <tr><td>식사</td><td>미쓰이 가든 3박 조식만 포함</td><td>조식 포함 (점심 · 저녁 별도)</td></tr>
+            <tr><td>식사</td><td>조식 미포함 (원하는 날 호텔에서 사 먹기)</td><td>조식 포함 (점심 · 저녁 별도)</td></tr>
             <tr><td>이동</td><td>대중교통, 골프채는 수하물 운송 따로 신청</td><td>공항 ↔ 골프장 ↔ 호텔 송영차량 포함</td></tr>
-            <tr><td>자유일정</td><td>일정 직접 구성</td><td>2일 (6/30, 7/3)</td></tr>
+            <tr><td>자유일정</td><td>시내 2일 (7/3, 7/4) · 일정 직접 구성</td><td>2일 (6/30, 7/3)</td></tr>
             <tr><td>기타</td><td>-</td><td>락커피 포함, 1억원 여행자보험</td></tr>
-            <tr><td>환율 영향</td><td>엔화 항목(약 <span id="cYenShare">173</span>만원)은 환율에 따라 변동</td><td>원화 견적이라 변동 없음</td></tr>
+            <tr><td>환율 영향</td><td>엔화 항목(약 <span id="cYenShare">-</span>만원)은 환율에 따라 변동</td><td>원화 견적이라 변동 없음</td></tr>
           </tbody>
         </table>
       </div>
@@ -199,15 +261,10 @@
       <h2>확인해 둘 점</h2>
       <ul class="checklist">
         <li>두 안 모두 <b>항공권은 제외</b>했고, 점심과 저녁 식사비도 들어 있지 않아요.</li>
-        <li>A안 라운딩비 11,000엔은 가정한 금액이에요. 예약할 때 실제 요금과 카트, 캐디 포함 여부를 확인해야 해요.</li>
         <li>B안 견적서의 불포함 항목에 적힌 유류할증료와 텍스는 항공권에 붙는 비용이라 위 금액에 넣지 않았어요.</li>
-        <li>A안 골프채 운송 16,000엔은 오갈 때를 합친 금액인지 예약 전에 한 번 더 확인하면 좋아요.</li>
+        <li>A안 시내 호텔 조식은 ‘여행 경비’ 탭에서 고른 횟수만큼 더해져요. B안은 조식이 포함돼 있어요.</li>
       </ul>
     </section>
-
-    <footer>
-      환율 기준: 100엔당 839원 (2026.10.21 기준). 금액은 원 단위 미만 반올림이에요.
-    </footer>
 
   </div>
 
@@ -241,6 +298,7 @@
   </form>
 </dialog>
 
+<script src="hotels-data.js"></script>
 <script src="script.js"></script>
 <script src="cost.js"></script>
 <script src="tabs.js"></script>

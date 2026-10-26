@@ -149,21 +149,43 @@ function randomKey() {
   return btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-// B안 고정 일정을 넣은 새 계획을 만들고 연결 (인터넷 연결 필요)
+// A안 고정 일정을 넣은 새 계획을 만들고 연결 (인터넷 연결 필요)
 export async function createTrip() {
   const key = randomKey();
   const trip = doc(db, 'trips', key);
   const batch = writeBatch(db);
-  batch.set(trip, { title: '삿포로 골프 여행 (B안)', createdAt: serverTimestamp() });
+  batch.set(trip, { title: '삿포로 골프 여행 (A안)', createdAt: serverTimestamp() });
   SEED_ITEMS.forEach((item) => {
     batch.set(doc(collection(trip, 'items')), { ...pick(item), by: getName(), updatedAt: serverTimestamp() });
   });
   batch.set(doc(collection(trip, 'history')), {
-    at: serverTimestamp(), by: getName(), text: '새 계획 만들기 (B안 골프 일정 포함)', itemId: null, before: null, after: null,
+    at: serverTimestamp(), by: getName(), text: '새 계획 만들기 (A안 고정 일정 포함)', itemId: null, before: null, after: null,
   });
   await batch.commit();
   connect(key);
   return key;
+}
+
+// 지금 계획의 고정 일정(골프 · 체크인 등)을 모두 지우고 A안 기본 일정으로 바꿈.
+// 직접 넣은 일정과 대기함은 그대로. 바뀐 일정마다 변경 기록이 남아 하나씩 되돌릴 수 있음
+export function replaceFixedItems() {
+  const itemsCol = collection(tripRef(), 'items');
+  const historyCol = collection(tripRef(), 'history');
+  const batch = writeBatch(db);
+  const log = (itemId, before, after, text) => batch.set(doc(historyCol), {
+    at: serverTimestamp(), by: getName(), text, itemId, before, after,
+  });
+  [...state.items.values()].filter((i) => i.kind === 'fixed').forEach((i) => {
+    batch.delete(doc(itemsCol, i.id));
+    log(i.id, pick(i), null, `‘${i.title}’ 삭제 (A안으로 바꾸기)`);
+  });
+  SEED_ITEMS.forEach((item) => {
+    const ref = doc(itemsCol);
+    const next = pick(item);
+    batch.set(ref, { ...next, by: getName(), updatedAt: serverTimestamp() });
+    log(ref.id, null, next, `‘${item.title}’ 추가 (A안으로 바꾸기)`);
+  });
+  batch.commit().catch(fail);
 }
 
 /* ===== 이름 (변경 기록에 '누가'로 표시) ===== */

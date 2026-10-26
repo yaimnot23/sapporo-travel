@@ -152,7 +152,7 @@ function statusHTML() {
         <button type="submit" class="btn-ghost">연결</button>
       </form>
       <hr>
-      <p><b>처음 계획을 만드는 사람만</b> 아래 버튼을 누르세요. B안 골프 일정이 미리 들어간 새 계획과 가족 공유 링크가 만들어집니다.</p>
+      <p><b>처음 계획을 만드는 사람만</b> 아래 버튼을 누르세요. A안 일정(키타히로시마 골프 4회 · 시내 이동 등)이 미리 들어간 새 계획과 가족 공유 링크가 만들어집니다.</p>
       <p><button type="button" class="btn" data-act="create">새 계획 만들기</button></p>
     </div>`;
 }
@@ -203,7 +203,10 @@ function shellHTML() {
       <ol id="historyList"></ol>
     </details>
 
-    <p class="small"><button type="button" class="link-btn" data-act="disconnect">이 기기에서 계획 연결 해제</button></p>`;
+    <p class="small plan-foot">
+      <button type="button" class="link-btn" data-act="reseed">고정 일정을 A안 기본 일정으로 바꾸기</button>
+      <button type="button" class="link-btn" data-act="disconnect">이 기기에서 계획 연결 해제</button>
+    </p>`;
 }
 
 function renderTray() {
@@ -304,6 +307,11 @@ root.addEventListener('click', async (e) => {
     if (a === 'create') createTrip(act);
     else if (a === 'disconnect') {
       if (confirm('이 기기에서 계획 연결을 해제할까요? 계획 자체는 지워지지 않고, 공유 링크로 다시 들어오면 됩니다.')) store.disconnect();
+    } else if (a === 'reseed') {
+      if (confirm('골프 · 체크인 같은 고정 일정(초록색)을 모두 지우고 A안 기본 일정으로 바꿀까요?\n\n직접 넣은 일정과 대기함은 그대로 남고, 최근 변경에서 하나씩 되돌릴 수 있어요.')) {
+        store.replaceFixedItems();
+        toast('고정 일정을 A안으로 바꿨어요.');
+      }
     } else if (a === 'copy') copyLink();
     else if (a === 'add-custom') openDialog(null);
     else if (a === 'undo') {
@@ -643,9 +651,8 @@ form.querySelector('[data-dlg="delete"]').addEventListener('click', () => {
 form.querySelector('[data-dlg="close"]').addEventListener('click', () => dialog.close());
 
 // 편집 창 안에서 출발 호텔 바꾸기 (장소 검색 탭과 같은 설정)
-document.getElementById('dlgPlace').addEventListener('click', (e) => {
-  const b = e.target.closest('[data-origin]');
-  if (b) setOriginHotel(b.getAttribute('data-origin'));
+document.getElementById('dlgPlace').addEventListener('change', (e) => {
+  if (e.target.matches('[data-origin-select]')) setOriginHotel(e.target.value);
 });
 window.addEventListener('originchange', () => {
   if (dialog.open && editing) refreshDialog();
