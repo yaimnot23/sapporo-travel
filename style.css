@@ -15,6 +15,8 @@
   --c2: #9C3D8B;
   --c3: #B4531A;
   --c4: #2B5CB0;
+  --c5: #3D7A22;
+  --c6: #8A6A00;
   --on-c: #FFFFFF;
 
   /* 지도 */
@@ -57,6 +59,8 @@
     --c2: #D98BCB;
     --c3: #F09A62;
     --c4: #7FA8F0;
+    --c5: #9BCB6A;
+    --c6: #E0C25A;
     --on-c: #0F1615;
 
     --park: #24402B;
@@ -92,6 +96,8 @@
   --c2: #D98BCB;
   --c3: #F09A62;
   --c4: #7FA8F0;
+  --c5: #9BCB6A;
+  --c6: #E0C25A;
   --on-c: #0F1615;
 
   --park: #24402B;
@@ -277,6 +283,54 @@ a:focus-visible {
   align-items: center;
 }
 
+/* 비교할 호텔 고르기 */
+.hotel-pick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.pick-lab {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-right: 4px;
+}
+
+.hotel-pick button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  border: 2px solid var(--hc, var(--line));
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--fg);
+  cursor: pointer;
+  opacity: .55;
+}
+
+.hotel-pick button[aria-pressed="true"] {
+  opacity: 1;
+  background: color-mix(in srgb, var(--hc) 14%, var(--card));
+}
+
+.hotel-pick .pick-all {
+  opacity: 1;
+  border-color: var(--line);
+  font-size: 15px;
+}
+
+.hotel-pick button:focus-visible {
+  outline: 3px solid var(--c4);
+  outline-offset: 2px;
+}
+
 /* ===== 출처 태그 ===== */
 .tag {
   display: inline-block;
@@ -337,7 +391,7 @@ a:focus-visible {
 
 .cmp .row {
   display: grid;
-  grid-template-columns: 8rem repeat(4, minmax(0, 1fr));
+  grid-template-columns: 8rem repeat(var(--n, 4), minmax(0, 1fr));
   border-top: 1px solid var(--line);
 }
 

@@ -25,14 +25,16 @@
       mapQuery: 'Holiday Inn & Suites Sapporo Odori Park, 北海道札幌市中央区南2条西8-6-1',
       summary: '2025년 10월에 문을 연 새 호텔. 오도리공원 서쪽에 있습니다.',
       rows: {
-        price: ['조식 미포함 130만원 / 조식 포함 154만원 (조식 +24만원)', 'me'],
+        price: ['148만원 · 무료 취소(6/2까지)', 'ref'],
+        room:  ['2 트윈 프리미엄 · 스몰 더블 2개 + 소파베드 · 29~33㎡', 'ref'],
+        rating: ['8.9 (리뷰 381개)', 'ref'],
         addr:  ['미나미2조 니시8초메', 'off'],
         st:    ['오도리역 도보 약 10분', 'ref'],
         park:  ['도보 약 5분', 'ref'],
         sus:   ['도보로 갈 수 있는 거리', 'off'],
         sap:   ['지하철로 오도리에서 1정거장 · 택시 약 10분', 'ref'],
         bath:  ['최상층 대욕장·사우나, 투숙객 무료', 'off'],
-        bf:    ['2층 뷔페', 'off'],
+        bf:    ['1인 ¥2,500 (약 2.1만원) · 2층 뷔페', 'ref'],
         io:    ['15:00 / 11:00', 'off'],
         size:  ['195실 · 10층 · 2025년 10월 개관', 'off'],
       },
@@ -43,7 +45,8 @@
         ['2025년에 지은 새 건물입니다.', 'off'],
       ],
       care: [
-        ['오도리역까지 도보 약 10분으로, 네 곳 중 지하철역이 먼 편입니다.', 'ref'],
+        ['오도리역까지 도보 약 10분으로, 지하철역이 먼 편입니다.', 'ref'],
+        ['가장 싼 스탠다드 더블(122만원)은 침대가 1개라 조건에 맞지 않아요. 침대가 따로인 트윈 프리미엄 기준입니다.', 'ref'],
         ['공항 셔틀은 없습니다.', 'off'],
       ],
     },
@@ -59,26 +62,29 @@
       mapQuery: 'Vessel Hotel Campana Sapporo Susukino, 北海道札幌市中央区南五条西6丁目16-1',
       summary: '스스키노 한복판. 먹고 마시는 거리 바로 옆입니다.',
       rows: {
-        price: ['조식 미포함 153만원 / 조식 포함 180만원 (조식 +27만원)', 'me'],
+        price: ['137만원 · 무료 취소(6/30까지)', 'ref'],
+        room:  ['스탠다드 트윈 · 싱글 침대 2개 · 20㎡', 'ref'],
+        rating: ['9.3 (리뷰 2,265개)', 'ref'],
         addr:  ['미나미5조 니시6초메', 'off'],
         st:    ['스스키노역 4번 출구 도보 4분', 'off'],
         park:  ['도보 약 11분', 'ref'],
         sus:   ['스스키노 거리 도보 1분', 'ref'],
         sap:   ['도보 18분 · 지하철 2정거장', 'ref'],
         bath:  ['2층 대욕장·드라이 사우나, 투숙객 무료', 'off'],
-        bf:    ['1층 라운지 6:00~9:30 · 신선한 해물이 있어 4곳 중 가장 풍부하지만, 일찍 가지 않으면 자리가 없어 못 먹을 수도 있음', 'me'],
+        bf:    ['1인 ¥2,300 (약 1.9만원) · 해물이 풍부하지만 붐빔 · 현장 판매는 인원이 차면 중단', 'ref'],
         io:    ['14:00 / 11:00', 'off'],
         size:  ['296실 · 2019년 6월 개관', 'off'],
       },
       good: [
         ['스스키노역 4번 출구에서 도보 4분, 스스키노 거리는 1분, 타누키코지는 3분입니다.', 'off'],
         ['2층 대욕장과 드라이 사우나가 무료입니다. 이용 시간은 6:00~10:00, 15:00~25:00입니다.', 'off'],
-        ['조식은 신선한 해물이 있어 4곳 중 가장 풍부합니다. 다만 일찍 가지 않으면 자리가 없어 못 먹을 수도 있습니다.', 'me'],
+        ['조식은 신선한 해물이 있어 가장 풍부한 편입니다. 다만 일찍 가지 않으면 자리가 없어 못 먹을 수도 있습니다.', 'me'],
       ],
       care: [
         ['삿포로역까지 도보 18분입니다. 지하철로는 2정거장입니다.', 'ref'],
         ['대욕장은 문신이 있으면 제공하는 스티커(8×10cm)로 가려야 들어갈 수 있습니다.', 'off'],
         ['오도리공원까지 도보 약 11분(약 0.8km)입니다.', 'ref'],
+        ['조식이 붐벼서 호텔이 현장 조식권 판매를 제한합니다. 그날 가서 사 먹으려다 못 살 수도 있어요.', 'ref'],
       ],
     },
     {
@@ -93,14 +99,16 @@
       mapQuery: 'Tokyu Stay Sapporo Odori, 北海道札幌市中央区南2条西5-26-2',
       summary: '오도리역 2번 출구에서 가까운 번화가 한가운데입니다.',
       rows: {
-        price: ['조식 미포함 144만원 / 조식 포함 160만원 (조식 +16만원)', 'me'],
+        price: ['144만원 · 무료 취소(7/1까지)', 'ref'],
+        room:  ['수페리어 트윈 · 싱글 침대 2개 · 19㎡', 'ref'],
+        rating: ['9.4 (리뷰 995개)', 'ref'],
         addr:  ['미나미2조 니시5초메', 'off'],
         st:    ['오도리역 2번 출구 도보 약 3분', 'off'],
         park:  ['3~9분 (자료마다 다름)', 'ref'],
         sus:   ['도보 약 5분', 'ref'],
         sap:   ['도보 약 11분 · 지하철 1정거장', 'ref'],
-        bath:  ['확인된 정보 없음', 'na'],
-        bf:    ['뷔페 · 요금 확인 못함', 'na'],
+        bath:  ['대욕장 없음 (trip.com 시설 목록 기준)', 'ref'],
+        bf:    ['1인 ¥2,100 (약 1.8만원) · 뷔페', 'ref'],
         io:    ['15:00 / 11:00', 'off'],
         size:  ['176실', 'off'],
       },
@@ -108,9 +116,10 @@
         ['오도리역 2번 출구에서 도보 약 3분입니다.', 'off'],
         ['타누키코지 상점가가 1~2분 거리입니다.', 'ref'],
         ['스스키노까지 도보 약 5분, 삿포로역까지 지하철 1정거장입니다.', 'ref'],
+        ['방마다 세탁기가 있어 편했다는 리뷰가 많습니다.', 'ref'],
       ],
       care: [
-        ['대욕장 정보를 찾지 못했습니다. 필요하면 예약 전에 호텔에 문의하세요.', 'na'],
+        ['대욕장이 없습니다.', 'ref'],
         ['오도리역 3번 출구는 2024년 7월부터 닫혀 있습니다. 2번 출구를 이용하세요.', 'off'],
         ['이름이 비슷한 다른 호텔 \'도큐스테이 삿포로\'(미나미1조 니시1)와 헷갈리지 마세요.', 'off'],
       ],
@@ -127,14 +136,16 @@
       mapQuery: 'Mitsui Garden Hotel Sapporo West, 北海道札幌市中央区北5条西6-2-4',
       summary: '삿포로역 바로 옆. 공항에서 오는 길이 가장 단순합니다.',
       rows: {
-        price: ['조식 미포함 138만원 / 조식 포함 162만원 (조식 +24만원)', 'me'],
+        price: ['125만원 (환불 불가) · 무료 취소는 139만원', 'ref'],
+        room:  ['스탠다드 침대 2개 · 스몰 더블 2개 · 24㎡', 'ref'],
+        rating: ['9.3 (리뷰 1,312개)', 'ref'],
         addr:  ['기타5조 니시6초메', 'off'],
         st:    ['JR 삿포로역 서쪽 출구 도보 4분 · 지하철역 도보 4분', 'off'],
         park:  ['도보 약 12분', 'ref'],
         sus:   ['걸어가기엔 먼 거리 (지하철 이용)', 'na'],
         sap:   ['도보 4분', 'off'],
         bath:  ['2층 대욕장, 투숙객 무료 · 15:00~다음날 9:00', 'off'],
-        bf:    ['2층 뷔페 · 성인 ¥2,970 / 어린이 ¥1,485', 'off'],
+        bf:    ['1인 ¥2,970 (약 2.5만원) · 2층 뷔페', 'ref'],
         io:    ['15:00 / 11:00', 'off'],
         size:  ['169실 · 13층 · 2020년 2월 개관', 'off'],
       },
@@ -146,7 +157,85 @@
       care: [
         ['오도리공원까지 도보 약 12분, 오도리역까지 약 14분이라 시내 관광은 걸어가기에 먼 편입니다.', 'ref'],
         ['조식 요금은 성인 ¥2,970입니다. 2026년 2월부터 적용된 요금입니다.', 'off'],
+        ['가장 싼 125만원은 환불 불가 요금입니다. 무료 취소(6/28까지)는 139만원입니다.', 'ref'],
         ['대욕장은 작은 규모입니다. 이름이 비슷한 \'미쓰이 가든 호텔 삿포로\'는 다른 호텔입니다.', 'off'],
+      ],
+    },
+    {
+      num: 5,
+      color: '--c5',
+      short: '몬토레 에델호프',
+      name: '호텔 몬토레 에델호프 삿포로',
+      lat: 43.0636,
+      lon: 141.3557,
+      addr: '札幌市中央区北2条西1-1 (060-0002)',
+      tel: '+81-11-242-7111',
+      mapQuery: 'Hotel Monterey Edelhof Sapporo, 北海道札幌市中央区北2条西1-1',
+      summary: '유럽풍 클래식 호텔. 14층 천연온천 스파가 자랑입니다.',
+      rows: {
+        price: ['134만원 · 무료 취소(6/23까지)', 'ref'],
+        room:  ['스탠다드 트윈 · 24㎡ · 침대 종류는 체크인 때 배정', 'ref'],
+        rating: ['9.2 (리뷰 1,609개)', 'ref'],
+        addr:  ['기타2조 니시1초메', 'ref'],
+        st:    ['지하철 삿포로역 약 300m · 오도리역 약 470m', 'ref'],
+        park:  ['약 370m', 'ref'],
+        sus:   ['오도리역에서 지하철 1정거장', 'ref'],
+        sap:   ['JR 삿포로역 약 700m', 'ref'],
+        bath:  ['14층 천연온천 스파·사우나, 투숙객 무료 (문신 불가)', 'ref'],
+        bf:    ['1인 ¥4,000 (약 3.4만원) · 뷔페, 카이센동·수프카레', 'ref'],
+        io:    ['15:00 / 11:00', 'ref'],
+        size:  ['300실 · 2000년 개관', 'ref'],
+      },
+      good: [
+        ['14층 천연온천 스파와 사우나를 투숙객은 무료로 씁니다.', 'ref'],
+        ['조식 평가가 좋습니다. 카이센동, 수프카레 등 메뉴가 다양하다는 리뷰가 많습니다.', 'ref'],
+        ['삿포로역과 오도리공원 사이라 걸어 다니기 좋고, 공항버스 타기도 편하다는 평이 있습니다.', 'ref'],
+        ['청결도 평가(9.4)가 높고, 객실이 일본 호텔치고 넓다는 리뷰가 많습니다.', 'ref'],
+      ],
+      care: [
+        ['문신이 있으면 스파에 들어갈 수 없습니다.', 'ref'],
+        ['스파는 7월 5일(체크아웃 날)이 정기 휴무입니다. 7/2~7/4 밤에는 이용할 수 있습니다.', 'ref'],
+        ['스탠다드 트윈은 침대 종류를 체크인 때 정합니다. 침대 2개가 확실한 남쪽 트윈(26㎡)은 139만원입니다.', 'ref'],
+        ['밤에는 스파가 붐비고, 카펫 등 일부 시설이 낡았다는 리뷰가 있습니다.', 'ref'],
+        ['조식이 1인 ¥4,000으로 비싼 편입니다.', 'ref'],
+      ],
+    },
+    {
+      num: 6,
+      color: '--c6',
+      short: '그랜드 호텔',
+      name: '삿포로 그랜드 호텔',
+      lat: 43.0622,
+      lon: 141.3514,
+      addr: '札幌市中央区北1条西4丁目 (060-0001)',
+      tel: '+81-11-261-3311',
+      mapQuery: 'Sapporo Grand Hotel, 北海道札幌市中央区北1条西4丁目',
+      summary: '1934년 문을 연 삿포로 대표 클래식 호텔. 지하도로 오도리 · 삿포로역과 이어집니다.',
+      rows: {
+        price: ['153만원 · 무료 취소(6/10까지)도 같은 값', 'ref'],
+        room:  ['런 오브 하우스 트윈 · 싱글 침대 2개 · 20㎡', 'ref'],
+        rating: ['9.4 (리뷰 1,003개)', 'ref'],
+        addr:  ['기타1조 니시4초메', 'ref'],
+        st:    ['지하철 오도리역 약 230m · 지하도(치카호) 바로 연결', 'ref'],
+        park:  ['약 390m', 'ref'],
+        sus:   ['오도리역에서 지하철 1정거장', 'ref'],
+        sap:   ['JR 삿포로역 약 640m · 지하도로 이동 가능', 'ref'],
+        bath:  ['대욕장 없음', 'ref'],
+        bf:    ['1인 ¥4,000 (약 3.4만원) · 뷔페', 'ref'],
+        io:    ['15:00 / 11:00', 'ref'],
+        size:  ['494실 · 1934년 개관 · 2006년 리모델링', 'ref'],
+      },
+      good: [
+        ['지하도(치카호)와 바로 이어져 비가 와도 오도리 · 삿포로역으로 편하게 다닙니다.', 'ref'],
+        ['공항버스 정류장이 호텔 바로 앞이라는 리뷰가 많습니다.', 'ref'],
+        ['한국어가 되는 직원이 있다는 리뷰가 많고, 서비스 평가(9.5)가 높습니다.', 'ref'],
+        ['리뉴얼한 본관 객실이 넓고 조용하다는 평이 많습니다.', 'ref'],
+      ],
+      care: [
+        ['여섯 곳 중 가장 비쌉니다.', 'ref'],
+        ['대욕장이 없습니다.', 'ref'],
+        ['오래된 건물이라 일부 객실의 노후 · 냄새 지적이 있습니다.', 'ref'],
+        ['조식이 1인 ¥4,000으로 비싼 편입니다.', 'ref'],
       ],
     },
   ];
@@ -167,16 +256,18 @@
 
   /* ===== 데이터: 비교 표 항목 (HOTELS[].rows의 키, 표에 보일 이름) ===== */
   const COMPARE_ROWS = [
-    ['price', '요금 (trip.com, 7월 2~5일)'],
-    ['addr',  '위치'],
-    ['st',    '가까운 역'],
-    ['park',  '오도리공원'],
-    ['sus',   '스스키노'],
-    ['sap',   '삿포로역'],
-    ['bath',  '대욕장'],
-    ['bf',    '조식 (뷔페)'],
-    ['io',    '체크인 / 아웃'],
-    ['size',  '규모'],
+    ['price',  '요금 (3박 · 2실, 조식 미포함)'],
+    ['room',   '방 · 침대'],
+    ['bf',     '조식 (가서 사 먹으면)'],
+    ['bath',   '대욕장'],
+    ['st',     '가까운 역'],
+    ['park',   '오도리공원'],
+    ['sus',    '스스키노'],
+    ['sap',    '삿포로역'],
+    ['rating', 'trip.com 평점'],
+    ['addr',   '위치'],
+    ['io',     '체크인 / 아웃'],
+    ['size',   '규모'],
   ];
 
   const TAG_LABELS = { off: '공식', ref: '참고', na: '미확인', me: '지우 확인' };
@@ -230,11 +321,55 @@
     return `--hc:var(${hotel.color})`;
   }
 
+  /* ===== 비교할 호텔 고르기 (고른 호텔만 표 · 지도 · 카드에 보임) ===== */
+  const SHOWN_STORAGE = 'sapporo.hotelShown';
+
+  function loadShown() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(SHOWN_STORAGE));
+      const nums = Array.isArray(saved) ? saved.filter((n) => HOTELS.some((h) => h.num === n)) : [];
+      if (nums.length) return new Set(nums);
+    } catch { /* 저장된 값이 없거나 못 읽으면 전체 */ }
+    return new Set(HOTELS.map((h) => h.num));
+  }
+
+  let shown = loadShown();
+  const visible = () => HOTELS.filter((h) => shown.has(h.num));
+
+  function saveShown() {
+    try { localStorage.setItem(SHOWN_STORAGE, JSON.stringify([...shown])); } catch { /* 저장 못 해도 동작 */ }
+  }
+
+  function renderPicker() {
+    document.getElementById('hotelPick').innerHTML =
+      '<span class="pick-lab">비교할 호텔</span>' +
+      HOTELS.map((h) =>
+        `<button type="button" style="${hotelStyle(h)}" aria-pressed="${shown.has(h.num)}" data-num="${h.num}"><span class="num">${h.num}</span>${esc(h.short)}</button>`
+      ).join('') +
+      `<button type="button" class="pick-all" data-num="all">${shown.size === HOTELS.length ? '하나씩 고르기' : '전체 보기'}</button>`;
+  }
+
+  // 호텔 하나를 켜고 끔. 마지막 한 곳은 끌 수 없음
+  function toggleShown(value) {
+    if (value === 'all') {
+      shown = shown.size === HOTELS.length ? new Set([HOTELS[0].num]) : new Set(HOTELS.map((h) => h.num));
+    } else {
+      const n = Number(value);
+      if (shown.has(n) && shown.size === 1) return;
+      if (shown.has(n)) shown.delete(n);
+      else shown.add(n);
+    }
+    saveShown();
+    if (selected !== null && !shown.has(HOTELS[selected].num)) selected = null;
+    renderAll();
+  }
+
   /* ===== 한눈에 보기 표 ===== */
   function renderCompareTable() {
+    const list = visible();
     let html =
       '<div class="row head"><div class="lab"></div>' +
-      HOTELS.map((h) =>
+      list.map((h) =>
         `<div class="cell" style="${hotelStyle(h)}"><span class="num">${h.num}</span><span>${esc(h.name)}</span></div>`
       ).join('') +
       '</div>';
@@ -242,47 +377,52 @@
     COMPARE_ROWS.forEach(([key, label]) => {
       html +=
         `<div class="row"><div class="lab">${label}</div>` +
-        HOTELS.map((h) => {
+        list.map((h) => {
           const [text, source] = h.rows[key];
           return `<div class="cell" style="${hotelStyle(h)}" data-h="${h.num}. ${esc(h.short)}">${esc(text)}${tagHTML(source)}</div>`;
         }).join('') +
         '</div>';
     });
 
-    document.getElementById('cmp').innerHTML = html;
+    const box = document.getElementById('cmp');
+    box.style.setProperty('--n', list.length);
+    box.innerHTML = html;
   }
 
   /* ===== 주요 지점까지 거리표 ===== */
   function renderDistanceTable() {
+    const list = visible();
     let html =
       '<div class="row head"><div class="lab"></div>' +
-      HOTELS.map((h) =>
+      list.map((h) =>
         `<div class="cell" style="${hotelStyle(h)}"><span class="num">${h.num}</span><span>${esc(h.short)}</span></div>`
       ).join('') +
       '</div>';
 
     PLACES.forEach((place) => {
-      const dists = HOTELS.map((h) => distance(h, place));
+      const dists = list.map((h) => distance(h, place));
       const nearest = Math.min(...dists);
       html +=
         `<div class="row"><div class="lab">${esc(place.name)}</div>` +
-        HOTELS.map((h, i) => {
+        list.map((h, i) => {
           const best = dists[i] === nearest ? ' best' : '';
           return `<div class="cell${best}" style="${hotelStyle(h)}" data-h="${h.num}. ${esc(h.short)}">${formatDistance(dists[i])}</div>`;
         }).join('') +
         '</div>';
     });
 
-    document.getElementById('dist').innerHTML = html;
+    const box = document.getElementById('dist');
+    box.style.setProperty('--n', list.length);
+    box.innerHTML = html;
   }
 
   /* ===== 지도 ===== */
-  let selected = null; // 선택된 호텔 번호(0~3), 없으면 null
+  let selected = null; // 선택된 호텔의 HOTELS 순서(0부터), 없으면 null
 
   function mapSVG() {
     const W = 650;
     const H = 1030;
-    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="삿포로 중심가 약식 지도. 호텔 4곳과 주요 지점의 위치 관계">`;
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="삿포로 중심가 약식 지도. 호텔과 주요 지점의 위치 관계">`;
 
     // 배경
     s += `<rect width="${W}" height="${H}" fill="var(--soft)"/>`;
@@ -332,6 +472,7 @@
 
     // 호텔 핀 (번호 동그라미 + 짧은 이름). 다른 호텔을 골랐으면 흐리게.
     HOTELS.forEach((h, i) => {
+      if (!shown.has(h.num)) return;
       const [x, y] = toMapXY(h);
       const isSelected = selected === i;
       const dim = selected !== null && !isSelected;
@@ -351,11 +492,11 @@
     return s + '</svg>';
   }
 
-  // 호텔 선택 버튼 (전체 + 호텔 4곳)
+  // 호텔 선택 버튼 (전체 + 고른 호텔)
   function selectButtonsHTML() {
     return (
       `<button type="button" aria-pressed="${selected === null}" data-i="all">전체</button>` +
-      HOTELS.map((h, i) =>
+      HOTELS.map((h, i) => !shown.has(h.num) ? '' :
         `<button type="button" style="${hotelStyle(h)}" aria-pressed="${selected === i}" data-i="${i}"><span class="num">${h.num}</span>${esc(h.short)}</button>`
       ).join('')
     );
@@ -401,7 +542,7 @@
     const listItems = (list) =>
       list.map(([text, source]) => `<li>${esc(text)}${tagHTML(source)}</li>`).join('');
 
-    document.getElementById('cards').innerHTML = HOTELS.map((h) =>
+    document.getElementById('cards').innerHTML = visible().map((h) =>
       `<article class="card" style="${hotelStyle(h)}">` +
         `<div class="t"><span class="num">${h.num}</span><h3>${esc(h.name)}</h3></div>` +
         `<p class="one">${esc(h.summary)}</p>` +
@@ -414,10 +555,19 @@
   }
 
   /* ===== 시작 ===== */
-  renderCompareTable();
-  renderDistanceTable();
-  renderMap();
-  renderCards();
+  function renderAll() {
+    renderPicker();
+    renderCompareTable();
+    renderDistanceTable();
+    renderMap();
+    renderCards();
+  }
+  renderAll();
+
+  document.getElementById('hotelPick').addEventListener('click', (e) => {
+    const button = e.target.closest('[data-num]');
+    if (button) toggleShown(button.getAttribute('data-num'));
+  });
 
   // 버튼 클릭 · 지도 핀 클릭 · 지도 핀에서 Enter/Space
   document.getElementById('sel').addEventListener('click', (e) => {
